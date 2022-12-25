@@ -1,4 +1,8 @@
 BACKEND:https://github.com/hilal-bstn/process-management-be
+
+-Handle Auth Token
+-Api integrate
+
 ![Ekran görüntüsü_20221226_013514](https://user-images.githubusercontent.com/77468985/209483541-27fa26ab-7bc6-46ee-8d3e-b84d92b94234.png)
 ![Ekran görüntüsü_20221226_013454](https://user-images.githubusercontent.com/77468985/209483561-954225e5-27a1-4ff0-af47-78e35a506896.png)
 ![Ekran görüntüsü_20221226_013605](https://user-images.githubusercontent.com/77468985/209483575-6406f517-09a5-4098-8675-dddff638fed8.png)
