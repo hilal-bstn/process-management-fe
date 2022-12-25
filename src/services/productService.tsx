@@ -43,5 +43,14 @@ export default class ProductService {
                 authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`
              }});
    }
+   async productAdd (product:ProductModel) {
+                await fetch(`http://localhost:5000/add-product`,{
+            method:'Post',
+            body: JSON.stringify({product}),
+            headers:{
+                'Content-Type':"application/json",
+                authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`
+                }});
+}
 
 };

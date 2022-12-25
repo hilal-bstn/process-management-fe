@@ -7,9 +7,9 @@ import UserService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
 
 const Register : React.FC = () => {
-      const [username,setUserName]=useState("");
-      const [password,setPassword]=useState("");
-      const [email,setEmail]=useState("");
+      const [username,setUserName]=useState('');
+      const [password,setPassword]=useState('');
+      const [email,setEmail]=useState('');
     
       const navigate=useNavigate();
       useEffect(()=>{
@@ -28,16 +28,19 @@ const Register : React.FC = () => {
                 password:password,
                 username:username
             }
-
+      if(email.length>0 &&username.length>0){
        let result = await userService.register(registerModel);
        
-       if(result){
+       if(result.result!==undefined){
                 
         localStorage.setItem("user",JSON.stringify(result.result));
         localStorage.setItem("token",JSON.stringify(result.auth));
 
          navigate("/");
-     }
+     }}
+     else{
+        alert("Please enter connect details.")
+    }
     }
 
       return (
@@ -68,7 +71,7 @@ const Register : React.FC = () => {
             
                 <Form.Item
                     name="email"      
-                    rules={[{ required: true, message: 'Please input your Email!' }]}
+                    rules={[{ type:'email',required: true, message: 'Please input your Email!' }]}
                 >
                     <Input 
                     className='inputBox-auth' 

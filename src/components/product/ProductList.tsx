@@ -1,176 +1,220 @@
-import React from 'react';
-import { Button, Table, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Empty, Form, Input, InputNumber, Modal, Select, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import AddProductModal from './modals/AddProductModal';
-import DeleteProductModal from './modals/DeleteProductModal';
-import {PlusOutlined} from '@ant-design/icons';
+import ProductService from '../../services/productService';
+import { EditOutlined,DeleteOutlined,ExclamationCircleOutlined} from '@ant-design/icons';
+import CompanyService from '../../services/companyService';
+import { SizeType } from 'antd/es/config-provider/SizeContext';
+import { ProductModel } from "../../models/productModel";
 
 interface DataType {
-  key: React.Key;
+  key: string;
   name: string;
-  age: number;
-  address: string;
+  category: string;
+  amount: number;
+  amountUnit:number;
+  company:string
 }
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: '30%',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'age',
-    width: '10%'
-  },
-  {
-    title: 'Amount',
-    dataIndex: 'address',
-    width: '10%',
-  },
-  {
-    title: 'Amount Unit',
-    dataIndex: 'address',
-    width: '10%',
-  },
-  {
-    title: 'Company',
-    dataIndex: 'address',
-    width: '40%',
-  },
-  {
-    title: 'Edit',
-    dataIndex: 'operation',
-    render: () => (
-    <Tooltip title="edit">
-        <AddProductModal/>
-    </Tooltip>)
-  ,
-  },
-  {
-    title: 'Delete',
-    dataIndex: 'operation',
-    render: () => <Tooltip title="Delete">
-    <DeleteProductModal />
-  </Tooltip>,
+const { confirm } = Modal;
 
-  }
-];
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+const validateMessages = {
+  required: '${label} is required!',
+  types: {
+    email: '${label} is not a valid email!',
+    number: '${label} is not a valid number!',
   },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
+  number: {
+    range: '${label} must be between ${min} and ${max}',
   },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
+};
 
 const onChange: TableProps<DataType>['onChange'] = ( extra) => {
   console.log('params', extra);
 };
 
 const ProductList: React.FC = () => {
-return  (
+  
+      const [products,setProducts] = useState([]);
+      const [companies,setCompanies] = useState([]as any[]);
+      const [size, setSize] = useState<SizeType>('middle');
+      const[name,setName]=React.useState('');
+      const[category,setCategory]=React.useState('');
+      const[amount,setAmount]=React.useState('');
+      const[amountUnit,setAmountUnit]=React.useState('');
+      const[companyId,setCompanyId] = React.useState('');
+      const[id,setId]=React.useState('');
+      const [isModalVisible, setIsModalVisible] = useState(false);
+
+      useEffect(() => {
+          getProducts();
+          getCompanies();
+      },[]);
+
+      const getProducts = async () => {
+        let productService = new ProductService();
+        let productResult = await productService.products();
+        if(productResult.length>0)
+        {
+          setProducts(productResult);    
+        }
+      }
+
+      const getCompanies = async () => {
+        let companyService = new CompanyService();
+        let companyResult = await companyService.companies();
+        
+        if(companyResult)
+        {      
+          setCompanies(companyResult);    
+          console.log(companyResult);
+
+        }
+      }
+
+      const columns: ColumnsType<DataType> = [
+        {
+          title: 'Name',
+          dataIndex: 'name',
+          width: '30%',
+        },
+        {
+          title: 'Category',
+          dataIndex: 'category',
+          width: '10%'
+        },
+        {
+          title: 'Amount',
+          dataIndex: 'amount',
+          width: '10%',
+        },
+        {
+          title: 'Amount Unit',
+          dataIndex: 'amountUnit',
+          width: '10%',
+        },
+        {
+          title: 'Company',
+          dataIndex: 'company',
+          width: '40%',
+        },
+        {
+          title: 'Edit',
+          dataIndex: 'operation',
+          render: (index,record) =>( 
+          <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
+        },
+        {
+          title: 'Delete',
+          dataIndex: 'operation',
+          render: (index,record) => <Tooltip title="Delete">
+                            <Space wrap>
+                              <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
+                            </Space>                   
+                          </Tooltip>,
+      
+        }
+      ];
+
+      const showDeleteConfirm = (record:any) => {
+        confirm({
+          title: 'Are you sure delete this product?',
+          icon: <ExclamationCircleOutlined />,
+          content: 'Transaction cannot be undone after confirmation.',
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk() {
+            const productService = new ProductService();
+            productService.productDelete(record._id);
+            getProducts();
+            console.log('OK');
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+      };
+
+      const showModal = (record:any) => {          
+          setName(record.name);
+          setCategory(record.category);
+          setAmount(record.amount);
+          setAmountUnit(record.amountUnit);
+          setCompanyId(record.companyId);
+          setId(record._id)
+          setIsModalVisible(true);                    
+        };
+
+        const handleOk = () => {     
+          const productService = new ProductService();
+          const productModel : ProductModel = {name:name,amount:+amount,amountUnit:+amountUnit,category:category,companyId:companyId}
+                      
+         productService.productUpdate(productModel,id)  
+          setIsModalVisible(false);
+          getProducts();
+        };
+      
+        const handleCancel = () => {
+          setIsModalVisible(false);
+        };
+
+        const handleChange = (value: string) => {
+          setCompanyId(value.toString());
+          console.log(companyId);
+          
+          
+        };
+        
+          return  (
   
         <div>
             <h1 className='table-title'>Products
               <br/>
-              <Tooltip title="Add Product">
-                    <Button className='add-button' shape="circle" icon={<PlusOutlined />} />
-              </Tooltip>
+              <AddProductModal/>
             </h1>
-            
-            <Table columns={columns} dataSource={data} onChange={onChange} pagination={false} />
+            <Table locale={{ emptyText: (<Empty/>)}}   columns={columns} dataSource={products} onChange={onChange} pagination={false} />
+
+            <Modal title="Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
+
+                <Form {...layout} name="nest-messages" 
+                initialValues={{ remember: true }}
+                validateMessages={validateMessages} className='model-form'>
+                
+                <Form.Item label="Name" rules={[{ required: true }]}>
+                  <Input value={name} onChange={(e)=>setName(e.target.value)}/>
+                </Form.Item>
+
+                <Form.Item  label="Category" rules={[{ required: true  }]}>
+                  <Input onChange={(e)=>setCategory(e.target.value)} value={category}/>
+                </Form.Item>
+
+                <Form.Item label="Amount" rules={[{ type: 'number', min: 0,required: true  }]}>
+                  <InputNumber onChange={(e)=>setAmount(e!)} value={amount}/>
+                </Form.Item>
+
+                <Form.Item  label="Amount Unit" rules={[{ type: 'number', min: 0,required: true  }]}>
+                <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
+                </Form.Item>
+
+                <Form.Item label="Company" rules={[{ required: true }]}>  
+                    <Select
+                      defaultValue={companyId}
+                      size={size}
+                      onChange={handleChange}
+                      style={{ width: 200 }}
+                    >
+                      { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
+                    </Select>
+                </Form.Item>
+
+              </Form>
+            </Modal>
         </div>)
 };
 

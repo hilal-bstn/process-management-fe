@@ -32,7 +32,7 @@ import { LoginModel } from "../../models/loginModel";
 
             let loginResult = await userService.login(userModel);
 
-            if(loginResult){
+            if(loginResult.user!==undefined){
                 
                localStorage.setItem("user",JSON.stringify(loginResult.user));
                localStorage.setItem("token",JSON.stringify(loginResult.auth));

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, SelectProps } from 'antd';
-import { EditOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Button, Empty, Form, Input, InputNumber, Modal, Select, SelectProps, Tooltip } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
-
+import {PlusOutlined} from '@ant-design/icons';
+import CompanyService from '../../../services/companyService';
+import ProductService from '../../../services/productService';
+import { ProductModel } from '../../../models/productModel';
 
 const layout = {
     labelCol: { span: 8 },
@@ -29,56 +31,96 @@ const layout = {
   }
   
 
-  const handleChange = (value: string | string[]) => {
-    console.log(`Selected: ${value}`);
-  };
 
 const AddProductModal: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [companies,setCompanies] = useState([]as any[]);
+  const[name,setName]=React.useState('');
+  const[category,setCategory]=React.useState('');
+  const[amount,setAmount]=React.useState('');
+  const[amountUnit,setAmountUnit]=React.useState('');
+  const[companyId,setCompanyId] = React.useState('');
+  const [size, setSize] = useState<SizeType>('middle');
+
+  useEffect(() => {
+    getCompanies();
+},[]);
+
+
+const getCompanies = async () => {
+  let companyService = new CompanyService();
+  let companyResult = await companyService.companies();
+  
+  if(companyResult)
+  {      
+    setCompanies(companyResult);    
+  }
+}
 
   const showModal = () => {
+          setName('');
+          setCategory('');
+          setAmount('');
+          setAmountUnit('');
+          setCompanyId('');
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
+    let productService = new ProductService();
+    const productModel : ProductModel = {name:name,amount:+amount,amountUnit:+amountUnit,category:category,companyId:companyId}
+                
+    productService.productAdd(productModel)  
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const onFinish = (values: any) => {
-    console.log(values);
+
+
+  
+  const handleChange = (value: string) => {
+    setCompanyId(value.toString());
   };
-  const [size, setSize] = useState<SizeType>('middle');
 
   return (
     <>
-      <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={showModal}/>
-      <Modal title="Product Update" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
-      <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} className='model-form'>
-      <Form.Item name={['user', 'name']} label="Name" rules={[{ required: true }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'email']} label="Category" rules={[{ required: true  }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'age']} label="Amount" rules={[{ type: 'number', min: 0,required: true  }]}>
-        <InputNumber />
-      </Form.Item>
-      <Form.Item name={['user', 'website']} label="Amount Unit" rules={[{ type: 'number', min: 0,required: true  }]}>
-      <InputNumber />
-      </Form.Item>
-      <Form.Item name={['user', 'introduction']} label="Company" rules={[{ required: true }]}>
-      <Select
-        size={size}
-        defaultValue="a1"
-        onChange={handleChange}
-        style={{ width: 200 }}
-        options={options}
-      />
-      </Form.Item>
-    </Form>
+    <Tooltip title="Add Product">
+        <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
+    </Tooltip>
+      <Modal title="Product Add" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
+      <Form {...layout} name="nest-messages" 
+                initialValues={{ remember: true }}
+                validateMessages={validateMessages} className='model-form'>
+                
+                <Form.Item label="Name" rules={[{ required: true }]}>
+                  <Input value={name} onChange={(e)=>setName(e.target.value)}/>
+                </Form.Item>
+
+                <Form.Item  label="Category" rules={[{ required: true  }]}>
+                  <Input onChange={(e)=>setCategory(e.target.value)} value={category}/>
+                </Form.Item>
+
+                <Form.Item label="Amount" rules={[{ type: 'number', min: 0,required: true  }]}>
+                  <InputNumber onChange={(e)=>setAmount(e!)} value={amount}/>
+                </Form.Item>
+
+                <Form.Item  label="Amount Unit" rules={[{ type: 'number', min: 0,required: true  }]}>
+                <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
+                </Form.Item>
+
+                <Form.Item label="Company" rules={[{ required: true }]}>  
+                    <Select
+                      size={size}
+                      onChange={handleChange}
+                      style={{ width: 200 }}
+                    >
+                      { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
+                    </Select>
+                </Form.Item>
+
+        </Form>
       </Modal>
     </>
   );

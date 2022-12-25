@@ -1,9 +1,10 @@
-import React from 'react';
-import { Button, Table, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Empty, Form, Input, Modal, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import DeleteCompanyModal from './modals/DeleteCompanyModal';
 import AddCompanyModal from './modals/AddCompanyModal';
-import {PlusOutlined} from '@ant-design/icons';
+import CompanyService from '../../services/companyService';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
+import { CompanyModel } from '../../models/companyModel';
 
 interface DataType {
   key: React.Key;
@@ -11,164 +12,167 @@ interface DataType {
   age: number;
   address: string;
 }
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: '30%',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'age',
-    width: '10%'
-  },
-  {
-    title: 'Amount',
-    dataIndex: 'address',
-    width: '10%',
-  },
-  {
-    title: 'Amount Unit',
-    dataIndex: 'address',
-    width: '10%',
-  },
-  {
-    title: 'Company',
-    dataIndex: 'address',
-    width: '40%',
-  },
-  {
-    title: 'Edit',
-    dataIndex: 'operation',
-    render: () => (
-    <Tooltip title="edit">
-        <AddCompanyModal/>
-    </Tooltip>)
-  ,
-  },
-  {
-    title: 'Delete',
-    dataIndex: 'operation',
-    render: () => <Tooltip title="Delete">
-    <DeleteCompanyModal />
-  </Tooltip>,
 
-  }
-];
+const { confirm } = Modal;
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
 
 const onChange: TableProps<DataType>['onChange'] = ( extra) => {
   console.log('params', extra);
 };
 
 const CompanyList: React.FC = () => {
+  const [companies,setCompanies] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const[companyName,setCompanyName]=React.useState('');
+  const[companyLegalNumber,setCompanyLegalNumber]=React.useState('');
+  const[incorporationCountry,setTncorporationCountry]=React.useState('');
+  const[website,setWebsite] = React.useState('');
+  const[id,setId]=React.useState('');
+
+  useEffect(() => {
+    getCompanies();
+},[]);
+
+const getCompanies = async () => {
+  let companyService = new CompanyService();
+  let companyResult = await companyService.companies();
+  
+  if(companyResult.length>0)
+  {      
+    setCompanies(companyResult);    
+  }
+}
+
+const columns: ColumnsType<DataType> = [
+  {
+    title: 'Company Name',
+    dataIndex: 'companyName',
+    width: '30%',
+  },
+  {
+    title: 'Company Legal Number',
+    dataIndex: 'companyLegalNumber',
+    width: '30%'
+  },
+  {
+    title: 'Incorporation Country',
+    dataIndex: 'incorporationCountry',
+    width: '20%',
+  },
+  {
+    title: 'Website',
+    dataIndex: 'website',
+    width: '10%',
+  },
+  {
+    title: 'Edit',
+    dataIndex: 'operation',
+    render: (index,record) => (
+      <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
+  ,
+  },
+  {
+    title: 'Delete',
+    dataIndex: 'operation',
+    render: (index,record) => <Tooltip title="Delete">
+                      <Space wrap>
+                        <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
+                      </Space>                   
+                    </Tooltip>,
+
+  }
+];
+
+const showDeleteConfirm = (record:any) => {
+  confirm({
+    title: 'Are you sure delete this product?',
+    icon: <ExclamationCircleOutlined />,
+    content: 'Transaction cannot be undone after confirmation.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk() {
+      const companyService = new CompanyService();
+      companyService.companyDelete(record._id);
+      getCompanies();
+    },
+    onCancel() {
+      console.log('Cancel');
+    },
+  });
+};
+
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const validateMessages = {
+  required: '${label} is required!',
+  types: {
+    number: '${label} is not a valid number!',
+  },
+  number: {
+    range: '${label} must be between ${min} and ${max}',
+  },
+};
+
+const showModal = (record:any) => {          
+      setCompanyName(record.companyName);
+      setCompanyLegalNumber(record.companyLegalNumber);
+      setTncorporationCountry(record.incorporationCountry);
+      setWebsite(record.website);
+      setId(record._id)
+      setIsModalOpen(true);
+};
+
+const handleOk = () => {     
+
+  const companyService = new CompanyService();
+  const companyModel : CompanyModel = {companyName:companyName,companyLegalNumber:companyLegalNumber,incorporationCountry:incorporationCountry,website:website}
+              
+  companyService.companyUpdate(companyModel,id)  
+    setIsModalOpen(false);
+    getCompanies();
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+    const onFinish = (values: any) => {
+      console.log(values);
+    
+};
+
 return  (
         <div>
             <h1 className='table-title'>Companies
             <br/>
-            <Tooltip title="Add Product">
-                    <Button className='add-button' shape="circle" icon={<PlusOutlined />} />
-              </Tooltip>
+            <AddCompanyModal/>
             </h1>
-            <Table columns={columns} dataSource={data} onChange={onChange} pagination={false} />
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies} onChange={onChange} pagination={false} />
+            
+            <Modal title="Company Update" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
+                <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} className='model-form'>
+              
+                  <Form.Item label="Name" rules={[{ required: true , message: 'Please input your username!' }]}>
+                    <Input value={companyName} onChange={(e)=>setCompanyName(e.target.value)}/>
+                  </Form.Item>
+                  
+                  <Form.Item  label="Legal Number" rules={[{ required: true  }]}>
+                    <Input value={companyLegalNumber} onChange={(e)=>setCompanyLegalNumber(e.target.value)}/>
+                  </Form.Item>
+                  
+                  <Form.Item  label="Country" rules={[{ type: 'number', min: 0,required: true  }]}>
+                    <Input value={incorporationCountry} onChange={(e)=>setTncorporationCountry(e.target.value)}/>
+                  </Form.Item>
+                  
+                  <Form.Item  label="Website" rules={[{ min: 0,required: true  }]}>
+                     <Input value={website} onChange={(e)=>setWebsite(e.target.value)}/>
+                  </Form.Item>
+          
+                </Form>
+      </Modal>
         </div>)
 };
 

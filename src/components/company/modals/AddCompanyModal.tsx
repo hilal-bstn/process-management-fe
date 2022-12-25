@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, SelectProps } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, SelectProps, Tooltip } from 'antd';
 import { EditOutlined} from '@ant-design/icons';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
-
+import {PlusOutlined} from '@ant-design/icons';
+import CompanyService from '../../../services/companyService';
+import { CompanyModel } from '../../../models/companyModel';
 
 const layout = {
     labelCol: { span: 8 },
@@ -20,56 +22,63 @@ const layout = {
       range: '${label} must be between ${min} and ${max}',
     },
   };
-  const options: SelectProps['options'] = [];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: i.toString(36) + i,
-      label: i.toString(36) + i,
-    });
-  }
-  
-
-  const handleChange = (value: string | string[]) => {
-    console.log(`Selected: ${value}`);
-  };
 
 const AddCompanyModal: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const[companyName,setCompanyName]=React.useState('');
+  const[companyLegalNumber,setCompanyLegalNumber]=React.useState('');
+  const[incorporationCountry,setTncorporationCountry]=React.useState('');
+  const[website,setWebsite] = React.useState('');
 
   const showModal = () => {
+    setCompanyName('');
+    setCompanyLegalNumber('');
+    setTncorporationCountry('');
+    setWebsite('');
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
+    let companyService = new CompanyService();
+    const companyModel : CompanyModel = {companyName:companyName,companyLegalNumber:companyLegalNumber,incorporationCountry:incorporationCountry,website:website}
+                
+    companyService.companyAdd(companyModel)  
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const onFinish = (values: any) => {
-    console.log(values);
-  };
-  const [size, setSize] = useState<SizeType>('middle');
+
 
   return (
     <>
-      <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={showModal}/>
+    <Tooltip title="Add Company">
+        <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
+    </Tooltip>
       <Modal title="Company Add" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
-      <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} className='model-form'>
-      <Form.Item name={['user', 'name']} label="Name" rules={[{ required: true }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'email']} label="Legal Number" rules={[{ required: true  }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'age']} label="Incorporation Country" rules={[{ type: 'number', min: 0,required: true  }]}>
-        <InputNumber />
-      </Form.Item>
-      <Form.Item name={['user', 'website']} label="Website" rules={[{ min: 0,required: true  }]}>
-      <InputNumber />
-      </Form.Item>
-    </Form>
+        <Form {...layout} name="nest-messages" 
+                initialValues={{ remember: true }}
+                validateMessages={validateMessages} className='model-form'
+                >
+                              
+              <Form.Item label="Name" rules={[{ required: true , message: 'Please input your name!' }]}>
+                <Input value={companyName} onChange={(e)=>setCompanyName(e.target.value)}/>
+              </Form.Item>
+              
+              <Form.Item  label="Legal Number" rules={[{ required: true, message: 'Please input your legal number!'   }]}>
+                <Input value={companyLegalNumber} onChange={(e)=>setCompanyLegalNumber(e.target.value)}/>
+              </Form.Item>
+              
+              <Form.Item  label="Country" rules={[{ required: true , message: 'Please input your country!' }]}>
+                <Input value={incorporationCountry} onChange={(e)=>setTncorporationCountry(e.target.value)}/>
+              </Form.Item>
+              
+              <Form.Item  label="Website">
+                 <Input value={website} onChange={(e)=>setWebsite(e.target.value)}/>
+              </Form.Item>
+      
+        </Form>
       </Modal>
     </>
   );

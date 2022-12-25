@@ -43,82 +43,82 @@ const Report: React.FC = ()=>{
   return(
     <Watermark content="Process Management">
     
-    <div className="site-card-wrapper">
-                    <h1 className='table-title'>Report</h1>
+      <div className="site-card-wrapper">
+                      <h1 className='table-title'>Report</h1>
 
-      <Row gutter={12}>
+          <Row gutter={12}>
 
-        <Col span={6}>
-          <Card
-            hoverable
-            style={{ width: 240 }}
-            cover={<img  
-              src={productImageSrc}
-              alt="logo"
-              className='process-image report-image'>
-                    </img>}>    
-                    <h1 className='table-title'>New Products</h1> 
-                    <Timeline>  
-     
+            <Col span={6}>
+              <Card
+                hoverable
+                style={{ width: 240 }}
+                cover={<img  
+                  src={productImageSrc}
+                  alt="logo"
+                  className='process-image report-image'>
+                        </img>}>    
+                        <h1 className='table-title'>New Products</h1> 
+                        <Timeline>  
+        
+                            {
+                            products.length>0  
+                            ? products.map((item,index)=> (<Timeline.Item  key = {item._id}>{item.name} - {item.category} - {item.amount}</Timeline.Item>))
+                            : <Empty />
+                            } 
+                        </Timeline>
+
+              </Card>
+            </Col>
+
+            <Col span={6}>
+              <Card
+                hoverable
+                style={{ width: 240 }}
+                cover={<img  
+                  src={companyImageSrc}
+                  alt="logo"
+                  className='process-image report-image'>
+              </img>}
+              >
+                  <h1 className='table-title'>New Companies</h1>   
+                  <Timeline> 
                         {
-                        products.length>0  
-                        ? products.map((item,index)=> (<Timeline.Item  key = {item._id}>{item.name} - {item.category} - {item.amount}</Timeline.Item>))
+                        companies.length>0  
+                        ? companies.map((item,index)=> (<Timeline.Item  key = {item._id}>{item.companyName} - {item.incorporationCountry} - {item.website}</Timeline.Item>))
                         : <Empty />
                         } 
-                    </Timeline>
+                  </Timeline>
+              </Card>
+            </Col>
 
-          </Card>
-        </Col>
+            <Col span={6}>
+              <Card
+                hoverable
+                style={{ width: 240 }}
+                cover={<img  
+                  src={userImageSrc}
+                  alt="logo"
+                  className='process-image report-image'>
+              </img>}
+              >
+                  <h1 className='table-title'>Process Management</h1> 
+                  <Tag icon={<TwitterOutlined />} color="#55acee">
+                        Twitter
+                      </Tag>
+                      <Tag icon={<YoutubeOutlined />} color="#cd201f">
+                        Youtube
+                      </Tag>
+                      <Tag icon={<LinkedinOutlined />} color="#55acee">
+                        LinkedIn
+                      </Tag>    
+              </Card>
+            </Col>
 
-        <Col span={6}>
-          <Card
-            hoverable
-            style={{ width: 240 }}
-            cover={<img  
-              src={companyImageSrc}
-              alt="logo"
-              className='process-image report-image'>
-          </img>}
-          >
-              <h1 className='table-title'>New Companies</h1>   
-              <Timeline> 
-                    {
-                    companies.length>0  
-                    ? companies.map((item,index)=> (<Timeline.Item  key = {item._id}>{item.companyName} - {item.incorporationCountry} - {item.website}</Timeline.Item>))
-                    : <Empty />
-                    } 
-              </Timeline>
-          </Card>
-        </Col>
-
-        <Col span={6}>
-          <Card
-            hoverable
-            style={{ width: 240 }}
-            cover={<img  
-              src={userImageSrc}
-              alt="logo"
-              className='process-image report-image'>
-          </img>}
-          >
-               <h1 className='table-title'>Process Management</h1> 
-               <Tag icon={<TwitterOutlined />} color="#55acee">
-                    Twitter
-                  </Tag>
-                  <Tag icon={<YoutubeOutlined />} color="#cd201f">
-                    Youtube
-                  </Tag>
-                  <Tag icon={<LinkedinOutlined />} color="#55acee">
-                    LinkedIn
-                  </Tag>    
-          </Card>
-        </Col>
-
-        <Tooltip title="More">
-          <Button onClick={moreButton} className='report-button' shape="circle" icon={<ArrowRightOutlined />} />
-        </Tooltip>
-      </Row>     
-      </div>
+            <Tooltip title="More">
+              <Button onClick={moreButton} className='report-button' shape="circle" icon={<ArrowRightOutlined />} />
+            </Tooltip>
+          </Row>     
+       </div>
     </Watermark>
 
   );
