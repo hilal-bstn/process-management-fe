@@ -23,6 +23,29 @@
   background-color: skyblue;
 }
 
+.footer{
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  /* background-color: skyblue; */
+  border-color: whitesmoke;
+  border-top-style: outset;
+
+}
+
+.logo{
+
+  width: 65px;
+  border-radius: 50%;
+  margin-top: 10px;
+  border-bottom: solid;
+  margin-bottom: 3px;
+  border-right-style: dashed;
+  lighting-color: currentcolor;
+
+  }
+
 .process-image{
   width:185px ;
   border-radius: 50%;
@@ -62,12 +85,65 @@
   border-radius: 40px;
 }
 
+.site-card-wrapper{
+  padding-left: 55px;
+  width: 95vi;
+}
+
+.report-button{
+  width: 250px;
+  height: 250px;
+  margin-top: 5vi;
+  font-size: 85px;
+  color: darksalmon;
+  border-bottom: dashed;
+  border-top: dashed;
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+
+.ant-spin-container{
+  height: 35vi;
+  overflow-y: auto;
+}
+.ant-table-container{
+  height: 35i;
+}
+.ant-table{
+  height: 36vi
+}
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+.table-title{
+    color: darksalmon;
+    font-family: emoji;
+    border-bottom-style: inset;
+    padding-bottom: 5px;
+}
+
+.delete-button{
+  border-right-color: chocolate;
+    border-left-color: chocolate;
+    color: darksalmon;
+}
+.ant-table-content{
+  border-top: outset;
+}
+.ant-modal-body{
+  display: inline-grid;
+}
+.ant-modal-title{
+  font-family: -webkit-body;
+    color: currentColor;
+    border-bottom-style: inset;
+}
+.deneme{
+  width: 250px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

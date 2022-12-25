@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import { Footer } from 'antd/es/layout/layout';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Nav from './components/layouts/Nav';
 import Login from './components/auth/Login';
@@ -9,6 +8,7 @@ import Report from './components/reports/report';
 import ProductList from './components/product/ProductList';
 import CompanyList from './components/company/CompanyList';
 import PrivateComponent from './components/layouts/PrivateComponent';
+import Footer from './components/layouts/Footer';
 
 function App() {
   return (

@@ -60,8 +60,8 @@ import { LoginModel } from "../../models/loginModel";
                     <h1 className='auth-title'> Sign in to your acount </h1>
 
                     <Form.Item
-                    name="email"      
-                    rules={[{ required: true, message: 'Please input your Email!' }]}
+                    name="email"  
+                    rules={[{ type:'email', required: true, message: 'Please input your Email!' }]}
                     >
                     <Input 
                     className='inputBox-auth' 
