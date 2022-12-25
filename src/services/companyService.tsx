@@ -3,10 +3,23 @@ import { CompanyModel } from "../models/companyModel";
 export default class CompanyService {
     async companies()
     {
-        await fetch('http://localhost:5000/companies',
+        const result = await fetch('http://localhost:5000/companies',
         {
         headers:{authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`}
         });
+        const data = await result.json()
+        return data;
+    } 
+
+    async newCompanies()
+    {
+        const result = await fetch('http://localhost:5000/newcompanies',
+        {
+            headers:{authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`}
+        });
+
+        const data = await result.json()
+        return data;
     } 
 
     async companyDelete(id:string){

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Table, Tooltip } from 'antd';
+import { Button, Table, Tooltip } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import AddProductModal from './modals/AddProductModal';
 import DeleteProductModal from './modals/DeleteProductModal';
-
+import {PlusOutlined} from '@ant-design/icons';
 
 interface DataType {
   key: React.Key;
@@ -163,7 +163,13 @@ const ProductList: React.FC = () => {
 return  (
   
         <div>
-            <h1 className='table-title'>Products</h1>
+            <h1 className='table-title'>Products
+              <br/>
+              <Tooltip title="Add Product">
+                    <Button className='add-button' shape="circle" icon={<PlusOutlined />} />
+              </Tooltip>
+            </h1>
+            
             <Table columns={columns} dataSource={data} onChange={onChange} pagination={false} />
         </div>)
 };

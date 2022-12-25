@@ -100,6 +100,17 @@
   border-top: dashed;
   border-left-style: hidden;
   border-right-style: hidden;
+  min-width: 250px !important;
+  
+}
+.add-button{
+  min-width: 35px !important;
+  width: 40px;
+  color: slateblue;
+  border-bottom: dashed;
+  border-top: dashed;
+  border-left-style: hidden;
+  border-right-style: hidden;
 }
 
 .ant-spin-container{
@@ -141,9 +152,14 @@
     color: currentColor;
     border-bottom-style: inset;
 }
-.deneme{
-  width: 250px;
+.report-image{
+  margin-left: 0vi;
 }
+
+.sub-title{
+  color: black;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
