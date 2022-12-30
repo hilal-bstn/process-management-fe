@@ -91,7 +91,7 @@ import NotificationService from "../../services/notificationService";
                             <Button onClick={handleLogin} icon={<LoginOutlined/>} block>Sign In</Button>
                         </Space>
                         
-                        No Account? <a href="">Create One!</a>
+                        No Account? <a href="/register">Create One!</a>
                     </Form.Item>
                 </Form>
       

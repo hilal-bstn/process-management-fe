@@ -100,6 +100,8 @@ const Register : React.FC = () => {
                     <Space direction="vertical" style={{ width: '100%' }}>
                         <Button onClick={collectData} icon={<UserAddOutlined />} block>Sign up</Button>
                     </Space>
+
+                   Do you have an account? <a href="/login"> Login!</a>
                 </Form.Item>
 
                 </Form>  
