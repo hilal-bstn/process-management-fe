@@ -29,10 +29,10 @@ const Register : React.FC = () => {
                 password:password,
                 username:username
             }
-      if(email.length>0 &&username.length>0){
+      if(email.length>0 && username.length>0){
        let result = await userService.register(registerModel);
        
-       if(result.result!==undefined){
+       if(result.result !== undefined){
                 
         localStorage.setItem("user",JSON.stringify(result.result));
         localStorage.setItem("token",JSON.stringify(result.auth));

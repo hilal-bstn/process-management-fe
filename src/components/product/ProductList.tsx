@@ -59,6 +59,7 @@ const ProductList: React.FC = () => {
       const getProducts = async () => {
         let productService = new ProductService();
         let productResult = await productService.products();
+        
         if(productResult.length>0)
         {
           setProducts(productResult);    
@@ -100,8 +101,8 @@ const ProductList: React.FC = () => {
         },
         {
           title: 'Company',
-          dataIndex: 'company',
           width: '40%',
+          render: (record) => record.companyId?.companyName
         },
         {
           title: 'Edit',
@@ -146,7 +147,7 @@ const ProductList: React.FC = () => {
           setCategory(record.category);
           setAmount(record.amount);
           setAmountUnit(record.amountUnit);
-          setCompanyId(record.companyId);
+          setCompanyId(record.companyId._id);
           setId(record._id)
           setIsModalVisible(true);                    
         };
@@ -178,7 +179,7 @@ const ProductList: React.FC = () => {
               <br/>
               <AddProductModal/>
             </h1>
-            <Table locale={{ emptyText: (<Empty/>)}}   columns={columns} dataSource={products} onChange={onChange} pagination={false} />
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} onChange={onChange} pagination={false} />
 
             <Modal title="Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
 
