@@ -5,6 +5,7 @@ import ProcessManagement from "../layouts/ProcessManagement";
 import { useNavigate } from "react-router-dom";
 import UserService from "../../services/userService";
 import { LoginModel } from "../../models/loginModel";
+import NotificationService from "../../services/notificationService";
 
     const Login: React.FC = () => {
         const onFinish = (values: any) => {
@@ -36,11 +37,12 @@ import { LoginModel } from "../../models/loginModel";
                 
                localStorage.setItem("user",JSON.stringify(loginResult.user));
                localStorage.setItem("token",JSON.stringify(loginResult.auth));
+               NotificationService.openSuccessNotification({description:"Successful Login.",placement:"bottomRight",title:""});
 
                 navigate("/");
             }
             else{
-                alert("Please enter connect details.")
+                NotificationService.openErrorNotification({description:"Email or password is incorrect!",placement:"bottomRight",title:""});
             }
         };
   

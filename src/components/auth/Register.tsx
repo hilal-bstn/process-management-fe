@@ -5,6 +5,7 @@ import ProcessManagement from "../layouts/ProcessManagement";
 import { RegisterModel } from "../../models/registerModel";
 import UserService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import NotificationService from "../../services/notificationService";
 
 const Register : React.FC = () => {
       const [username,setUserName]=useState('');
@@ -35,12 +36,13 @@ const Register : React.FC = () => {
                 
         localStorage.setItem("user",JSON.stringify(result.result));
         localStorage.setItem("token",JSON.stringify(result.auth));
+        NotificationService.openSuccessNotification({description:"Successful Register.",placement:"bottomRight",title:""});
 
          navigate("/");
      }}
-     else{
-        alert("Please enter connect details.")
-    }
+        else{
+            NotificationService.openErrorNotification({description:"Please enter connect details.",placement:"bottomRight",title:"Form Invalid!"});
+        }
     }
 
       return (
