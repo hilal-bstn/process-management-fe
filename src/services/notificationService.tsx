@@ -1,5 +1,4 @@
 import { notification } from "antd";
-import { NotificationPlacement } from "antd/es/notification/interface";
 import { NotificationModel } from "../models/notificationModel";
 
 
@@ -11,21 +10,19 @@ const openInfoNotification = (notificationModel:NotificationModel) => {
       });
     };
 
-const openSuccessNotification = (placement: NotificationPlacement) => {
+const openSuccessNotification = (notificationModel:NotificationModel) => {
   notification.success({
-        message: `Notification ${placement}`,
-        description:
-          'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-        placement,
+    message: notificationModel.title,
+    description:notificationModel.description,
+    placement:notificationModel.placement,
       });
     };
 
-const openErrorNotification = (placement: NotificationPlacement) => {
+const openErrorNotification = (notificationModel:NotificationModel) => {
   notification.error({
-        message: `Notification ${placement}`,
-        description:
-          'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-        placement,
+    message: notificationModel.title,
+    description:notificationModel.description,
+    placement:notificationModel.placement,
       });
     };
 
