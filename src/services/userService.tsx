@@ -27,4 +27,15 @@ export default class UserService {
             const data = await result.json()
             return data;
     };
+
+    async totalUser() : Promise<any>  {
+        const result = await fetch('http://localhost:5000/total-user',{
+            method:'get',
+            headers:{
+                'Content-Type':'application/json'
+            }         
+        })
+            const data = await result.json()
+            return data;
+    };
 };

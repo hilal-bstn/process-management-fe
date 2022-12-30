@@ -12,11 +12,13 @@ import {
   YoutubeOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import UserService from '../../services/userService';
 
 const Report: React.FC = ()=>{
 
-  const [products,setProducts]=React.useState([] as any[])
-  const [companies,setCompanies]=React.useState([] as any[]);
+  const [products,setProducts] = React.useState([] as any[])
+  const [companies,setCompanies] = React.useState([] as any[]);
+  const [totalUser,setTotalUser] = React.useState([] as any[]);
 
   const navigate=useNavigate();
   const moreButton=()=>{
@@ -25,6 +27,7 @@ const Report: React.FC = ()=>{
   useEffect(() => {
       getProducts();
       getCompanies();
+      totalUsers();
   },[]);
 
 
@@ -38,6 +41,12 @@ const Report: React.FC = ()=>{
     let companyService = new CompanyService();
     let companyResult = await companyService.newCompanies();
     setCompanies(companyResult);
+  }
+
+  const totalUsers = async () => {
+    let userService = new UserService();
+    let totalUserResult = await userService.totalUser();
+    setTotalUser(totalUserResult.usersCount);
   }
 
   return(
@@ -102,6 +111,7 @@ const Report: React.FC = ()=>{
               </img>}
               >
                   <h1 className='table-title'>Process Management</h1> 
+                  <h1 className='total-user'>TotalUser: {totalUser}</h1> 
 
                       <Tag icon={<TwitterOutlined />} color="#55acee">
                         Twitter

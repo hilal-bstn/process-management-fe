@@ -156,6 +156,12 @@
   margin-left: 0vi;
 }
 
+.total-user{
+  font-family: fangsong;
+  border-bottom: double;
+  color: grey;
+}
+
 .sub-title{
   color: black;
 }
