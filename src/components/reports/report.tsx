@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Card, Col, Empty, Row, Tag, Timeline, Tooltip, Watermark } from 'antd';
 import { ArrowRightOutlined} from '@ant-design/icons';
 import productImageSrc from '../../images/product.jpg';
@@ -12,8 +12,6 @@ import {
   YoutubeOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-
-const { Meta } = Card;
 
 const Report: React.FC = ()=>{
 

@@ -85,7 +85,7 @@ const columns: ColumnsType<DataType> = [
 
 const showDeleteConfirm = (record:any) => {
   confirm({
-    title: 'Are you sure delete this product?',
+    title: 'Are you sure delete this company?',
     icon: <ExclamationCircleOutlined />,
     content: 'Transaction cannot be undone after confirmation.',
     okText: 'Yes',
@@ -172,7 +172,7 @@ return  (
                   </Form.Item>
           
                 </Form>
-      </Modal>
+            </Modal>
         </div>)
 };
 
