@@ -17,6 +17,7 @@ const Report: React.FC = ()=>{
 
   const [products,setProducts]=React.useState([] as any[])
   const [companies,setCompanies]=React.useState([] as any[]);
+
   const navigate=useNavigate();
   const moreButton=()=>{
     navigate('/products');
@@ -25,6 +26,7 @@ const Report: React.FC = ()=>{
       getProducts();
       getCompanies();
   },[]);
+
 
   const getProducts = async () => {
     let productService = new ProductService();
@@ -100,12 +102,15 @@ const Report: React.FC = ()=>{
               </img>}
               >
                   <h1 className='table-title'>Process Management</h1> 
-                  <Tag icon={<TwitterOutlined />} color="#55acee">
+
+                      <Tag icon={<TwitterOutlined />} color="#55acee">
                         Twitter
                       </Tag>
+
                       <Tag icon={<YoutubeOutlined />} color="#cd201f">
                         Youtube
                       </Tag>
+
                       <Tag icon={<LinkedinOutlined />} color="#55acee">
                         LinkedIn
                       </Tag>    
