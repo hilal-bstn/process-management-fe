@@ -47,7 +47,7 @@ import NotificationService from "../../services/notificationService";
       <div>                
             <ProcessManagement/>
             
-            <div  className="auth-div">
+            <div className="auth-div">
           
                 <Form
                     name="normal_login"

@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Empty, Form, Input, Modal, Space, Table, Tooltip } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
 import CompanyService from '../../services/companyService';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import { CompanyModel } from '../../models/companyModel';
 import { CompanyTbl } from '../../models/tableModels/companyTbl';
+import NotificationService from '../../services/notificationService';
 
 
 const { confirm } = Modal;
 
 
 const CompanyList: React.FC = () => {
+
+  const [form] = Form.useForm();
   const [companies, setCompanies] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [companyName, setCompanyName] = React.useState('');
-  const [companyLegalNumber, setCompanyLegalNumber] = React.useState('');
-  const [incorporationCountry, setTncorporationCountry] = React.useState('');
-  const [website, setWebsite] = React.useState('');
   const [id,setId] = React.useState('');
   const [isModalUpdate, setIsModalUpdate] = useState(false);
 
@@ -79,40 +78,27 @@ const columns: ColumnsType<CompanyTbl> = [
 ];
 
 const showDeleteConfirm = (record:any) => {
-  confirm({
-    title: 'Are you sure delete this company?',
-    icon: <ExclamationCircleOutlined />,
-    content: 'Transaction cannot be undone after confirmation.',
-    okText: 'Yes',
-    okType: 'danger',
-    cancelText: 'No',
-    onOk() {
-      const companyService = new CompanyService();
-      companyService.companyDelete(record._id);
-      getCompanies();
-    },
-    onCancel() {},
-  });
-};
-
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+    confirm({
+      title: 'Are you sure delete this company?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Transaction cannot be undone after confirmation.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        const companyService = new CompanyService();
+        companyService.companyDelete(record._id);
+        getCompanies();
+      },
+      onCancel() {},
+    });
 };
 
 const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    number: '${label} is not a valid number!',
-  },
-  number: {
-    range: '${label} must be between ${min} and ${max}',
-  },
+  required: '${label} is required!'
 };
 
-const showModal = (record:any) => {
-  
+const showModal = (record:any) => {  
       if(record._id)
       {     
         setIsModalUpdate(true);        
@@ -121,35 +107,45 @@ const showModal = (record:any) => {
       else{
         setIsModalUpdate(false);        
       }
-      setCompanyName(record.companyName);
-      setCompanyLegalNumber(record.companyLegalNumber);
-      setTncorporationCountry(record.incorporationCountry);
-      setWebsite(record.website);
-      
-      setIsModalOpen(true);
-      
+      form.setFieldsValue({
+        companyName: record.companyName,
+        companyLegalNumber: record.companyLegalNumber,
+        incorporationCountry: record.incorporationCountry,
+        website:record.website
+      });
+
+      setIsModalOpen(true);   
 };
 
-const handleOk = () => {     
+    const onFinish = (values: any) => {
+      const companyService = new CompanyService();
+      const companyModel : CompanyModel = {
+        companyName: values.companyName,
+        companyLegalNumber: values.companyLegalNumber,
+        incorporationCountry: values.incorporationCountry,
+        website: values.website}
+        
+        if(isModalUpdate)
+        {
+          companyService.companyUpdate(companyModel,id);
+          NotificationService.openSuccessNotification({description:"Record successfully updated!",placement:"bottomRight",title:""});  
+        }
+        else{
+          companyService.companyAdd(companyModel);
+          NotificationService.openSuccessNotification({description:"Record successfully added!",placement:"bottomRight",title:""});  
+        }
 
-  const companyService = new CompanyService();
-  const companyModel : CompanyModel = {companyName:companyName,companyLegalNumber:companyLegalNumber,incorporationCountry:incorporationCountry,website:website}
-    
-    if(isModalUpdate)
-    {
-      companyService.companyUpdate(companyModel,id)  
-    }
-    else{
-      companyService.companyAdd(companyModel);
-    }
-    setIsModalOpen(false);
-    getCompanies();
+      setIsModalOpen(false);
+      getCompanies();
     };
+  
+    const onFinishFailed = (errorInfo: any) => {
+      NotificationService.openErrorNotification({description:"Required fields cannot be empty!",placement:"bottomRight",title:"Invalid Form"});
+    };
+
     const handleCancel = () => {
       setIsModalOpen(false);
     };
-    const onFinish = (values: any) => {};
-
 return (
         <div>
             <h1 className='table-title'>Companies
@@ -160,25 +156,65 @@ return (
             </h1>
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies}/>
             
-            <Modal title="Company Update" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
-                <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} className='model-form'>
-              
-                  <Form.Item label="Name" rules={[{ required: true , message: 'Please input your username!' }]}>
-                    <Input value={companyName} onChange={(e)=>setCompanyName(e.target.value)}/>
+            <Modal 
+              title = {isModalUpdate ?"Company Update":"Company Add"} 
+              open={isModalOpen} 
+              onCancel={handleCancel} 
+              footer={null}>
+
+                <Form 
+                  name="nest-messages"
+                  layout="vertical"
+                  initialValues={{ remember: true }}
+                  form={form}
+                  validateMessages={validateMessages}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+                  >
+
+                  <Form.Item 
+                        label="Name" 
+                        name="companyName" 
+                        rules={[{ required: true }]}
+                        >
+                    <Input/>
                   </Form.Item>
                   
-                  <Form.Item  label="Legal Number" rules={[{ required: true  }]}>
-                    <Input value={companyLegalNumber} onChange={(e)=>setCompanyLegalNumber(e.target.value)}/>
+                  <Form.Item 
+                        label="Legal Number"  
+                        name="companyLegalNumber" 
+                        rules={[{ required: true  }]}
+                        >
+                    <Input/>
                   </Form.Item>
                   
-                  <Form.Item  label="Country" rules={[{ type: 'number', min: 0,required: true  }]}>
-                    <Input value={incorporationCountry} onChange={(e)=>setTncorporationCountry(e.target.value)}/>
+                  <Form.Item 
+                        label="Country" 
+                        name="incorporationCountry" 
+                        rules={[{ required: true  }]}
+                        >
+                    <Input/>
                   </Form.Item>
                   
-                  <Form.Item  label="Website" rules={[{ min: 0,required: true  }]}>
-                     <Input value={website} onChange={(e)=>setWebsite(e.target.value)}/>
+                  <Form.Item 
+                        label="Website" 
+                        name="website" 
+                        rules={[{ required: true  }]}
+                        >
+                     <Input/>
                   </Form.Item>
-          
+                  <Space className='modal-form'>
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                      <Button onClick={handleCancel} >Cancel</Button>
+                    </Form.Item>
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                      <Button type="primary" htmlType="submit" >
+                        Submit
+                      </Button>
+                    </Form.Item>
+                    </Space>
                 </Form>
             </Modal>
         </div>)

@@ -99,7 +99,7 @@ const ProductList: React.FC = () => {
           title: 'Edit',
           key: 'edit',
           render: (index,record) =>( 
-          <Button shape="circle" title="Edit" icon={<EditOutlined />} key={index} onClick={() => showModal(record)}/>)
+            <Button shape="circle" title="Edit" icon={<EditOutlined />} key={index} onClick={() => showModal(record)}/>)
         },
         {
           title: 'Delete',
@@ -186,29 +186,29 @@ const ProductList: React.FC = () => {
 
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products}/>
 
-            <Modal title="Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
+            <Modal title = "Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
 
                 <Form {...layout} name="nest-messages" 
                 initialValues={{ remember: true }}
                 validateMessages={validateMessages} className='model-form'>
                 
-                <Form.Item label="Name" rules={[{ required: true }]}>
+                <Form.Item label="Name" name="name" rules={[{ required: true }]}>
                   <Input value={name} onChange={(e)=>setName(e.target.value)}/>
                 </Form.Item>
 
-                <Form.Item  label="Category" rules={[{ required: true  }]}>
+                <Form.Item label="Category" name="category" rules={[{ required: true  }]}>
                   <Input onChange={(e)=>setCategory(e.target.value)} value={category}/>
                 </Form.Item>
 
-                <Form.Item label="Amount" rules={[{ type: 'number', min: 0,required: true  }]}>
+                <Form.Item label="Amount" name="amount" rules={[{ type: 'number', min: 0, required: true  }]}>
                   <InputNumber onChange={(e)=>setAmount(e!)} value={amount}/>
                 </Form.Item>
 
-                <Form.Item  label="Amount Unit" rules={[{ type: 'number', min: 0,required: true  }]}>
+                <Form.Item  label="Amount Unit" name="amountUnit" rules={[{ type: 'number', min: 0, required: true  }]}>
                   <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
                 </Form.Item>
 
-                <Form.Item label="Company" rules={[{ required: true }]}>  
+                <Form.Item label="Company" name="companyId" rules={[{ required: true }]}>  
                     <Select
                       defaultValue={companyId}
                       size={size}

@@ -157,6 +157,13 @@
     color: currentColor;
     border-bottom-style: inset;
 }
+.modal-form{
+  float: right;
+}
+.ant-form-vertical{
+  width: 25vi;
+  margin-left: 2vi;
+}
 
 .report-image{
   margin-left: 0vi;
