@@ -61,10 +61,7 @@ const ProductList: React.FC = () => {
         
         if(companyResult)
         {      
-          setCompanies(companyResult);    
-          console.log(companyResult);
-
-        }
+          setCompanies(companyResult);}
       }
 
       const columns: ColumnsType<ProductTbl> = [
@@ -129,11 +126,8 @@ const ProductList: React.FC = () => {
             const productService = new ProductService();
             productService.productDelete(record._id);
             getProducts();
-            console.log('OK');
           },
-          onCancel() {
-            console.log('Cancel');
-          },
+          onCancel() {},
         });
       };
 
@@ -179,7 +173,6 @@ const ProductList: React.FC = () => {
 
         const handleChange = (value: string) => {
           setCompanyId(value.toString());
-          console.log(companyId);
         };
         
     return ( 

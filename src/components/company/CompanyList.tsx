@@ -91,9 +91,7 @@ const showDeleteConfirm = (record:any) => {
       companyService.companyDelete(record._id);
       getCompanies();
     },
-    onCancel() {
-      console.log('Cancel');
-    },
+    onCancel() {},
   });
 };
 
@@ -150,10 +148,7 @@ const handleOk = () => {
     const handleCancel = () => {
       setIsModalOpen(false);
     };
-    const onFinish = (values: any) => {
-      console.log(values);
-    
-};
+    const onFinish = (values: any) => {};
 
 return (
         <div>

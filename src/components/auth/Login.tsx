@@ -8,16 +8,14 @@ import { LoginModel } from "../../models/loginModel";
 import NotificationService from "../../services/notificationService";
 
     const Login: React.FC = () => {
-        const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-        };
-        const[email,setEmail]=React.useState('');
-        const[password,setPassword]=React.useState('');
+        const onFinish = (values: any) => {};
+        const [email, setEmail] = React.useState('');
+        const [password, setPassword] = React.useState('');
 
         const navigate=useNavigate();
 
-        useEffect(()=>{
-            const auth=localStorage.getItem('user');
+        useEffect(() => {
+            const auth = localStorage.getItem('user');
             if(auth)
             {
                 navigate('/')
@@ -27,13 +25,12 @@ import NotificationService from "../../services/notificationService";
         const handleLogin = async() => {
             let userService = new UserService();
             let userModel : LoginModel = {
-                email:email,
-                password:password}
-                console.warn(userModel);
+                email: email,
+                password: password}
 
             let loginResult = await userService.login(userModel);
 
-            if(loginResult.user!==undefined){
+            if(loginResult.user !== undefined){
                 
                localStorage.setItem("user",JSON.stringify(loginResult.user));
                localStorage.setItem("token",JSON.stringify(loginResult.auth));
