@@ -10,23 +10,19 @@ import { CompanyTbl } from '../../models/tableModels/companyTbl';
 const { confirm } = Modal;
 
 
-const onChange: TableProps<CompanyTbl>['onChange'] = ( extra) => {
-  console.log('params', extra);
-};
-
 const CompanyList: React.FC = () => {
-  const [companies,setCompanies] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const[companyName,setCompanyName]=React.useState('');
-  const[companyLegalNumber,setCompanyLegalNumber]=React.useState('');
-  const[incorporationCountry,setTncorporationCountry]=React.useState('');
-  const[website,setWebsite] = React.useState('');
-  const[id,setId]=React.useState('');
+  const [companyName, setCompanyName] = React.useState('');
+  const [companyLegalNumber, setCompanyLegalNumber] = React.useState('');
+  const [incorporationCountry, setTncorporationCountry] = React.useState('');
+  const [website, setWebsite] = React.useState('');
+  const [id,setId] = React.useState('');
   const [isModalUpdate, setIsModalUpdate] = useState(false);
 
   useEffect(() => {
     getCompanies();
-},[]);
+  },[]);
 
 const getCompanies = async () => {
   let companyService = new CompanyService();
@@ -43,32 +39,36 @@ const columns: ColumnsType<CompanyTbl> = [
     title: 'Company Name',
     dataIndex: 'companyName',
     width: '30%',
+    key: 'companyName'
   },
   {
     title: 'Company Legal Number',
     dataIndex: 'companyLegalNumber',
-    width: '30%'
+    width: '30%',
+    key: 'companyLegalNumber'
   },
   {
     title: 'Incorporation Country',
     dataIndex: 'incorporationCountry',
     width: '20%',
+    key: 'incorporationCountry'
   },
   {
     title: 'Website',
     dataIndex: 'website',
     width: '10%',
+    key: 'website'
   },
   {
     title: 'Edit',
-    dataIndex: 'operation',
+    key: 'edit',
     render: (index,record) => (
       <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
   ,
   },
   {
     title: 'Delete',
-    dataIndex: 'operation',
+    key: 'delete',
     render: (index,record) => <Tooltip title="Delete">
                       <Space wrap>
                         <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
@@ -163,7 +163,7 @@ return (
                 <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
             </Tooltip>
             </h1>
-            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies} onChange={onChange} pagination={false} />
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies}/>
             
             <Modal title="Company Update" open={isModalOpen} onOk={handleOk}   onCancel={handleCancel}>
                 <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} className='model-form'>

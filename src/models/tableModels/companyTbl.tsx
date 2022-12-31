@@ -1,5 +1,5 @@
 export interface CompanyTbl {
-    key: React.Key;
+    key: string;
     name: string;
     age: number;
     address: string;

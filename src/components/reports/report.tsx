@@ -62,13 +62,12 @@ const Report: React.FC = ()=>{
                 hoverable
                 style={{ width: 240 }}
                 cover={<img  
-                  src={productImageSrc}
-                  alt="logo"
-                  className='process-image report-image'>
+                src={productImageSrc}
+                alt="logo"
+                className='process-image report-image'>
                         </img>}>    
                         <h1 className='table-title'>New Products</h1> 
-                        <Timeline>  
-        
+                        <Timeline>         
                             {
                             products.length>0  
                             ? products.map((item,index)=> (<Timeline.Item  key = {item._id}>{item.name} - {item.category} - {item.amount}</Timeline.Item>))

@@ -26,10 +26,6 @@ const validateMessages = {
   },
 };
 
-const onChange: TableProps<ProductTbl>['onChange'] = (extra) => {
-  console.log('params', extra);
-};
-
 const ProductList: React.FC = () => {
   
       const [products, setProducts] = useState([]);
@@ -76,40 +72,45 @@ const ProductList: React.FC = () => {
           title: 'Name',
           dataIndex: 'name',
           width: '30%',
+          key: 'name'
         },
         {
           title: 'Category',
           dataIndex: 'category',
-          width: '10%'
+          width: '10%',
+          key: 'category'
         },
         {
           title: 'Amount',
           dataIndex: 'amount',
           width: '10%',
+          key: 'amount'
         },
         {
           title: 'Amount Unit',
           dataIndex: 'amountUnit',
           width: '10%',
+          key: 'amountUnit'
         },
         {
           title: 'Company',
           width: '40%',
+          key: 'company',
           render: (record) => record.companyId?.companyName
         },
         {
           title: 'Edit',
-          dataIndex: 'operation',
+          key: 'edit',
           render: (index,record) =>( 
-          <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
+          <Button shape="circle" title="Edit" icon={<EditOutlined />} key={index} onClick={() => showModal(record)}/>)
         },
         {
           title: 'Delete',
-          dataIndex: 'operation',
+          key: 'delete',
           render: (index,record) => 
                           <Tooltip title="Delete">
                             <Space wrap>
-                              <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
+                              <Button onClick={() =>showDeleteConfirm(record)} key={index} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
                             </Space>                   
                           </Tooltip>,
       
@@ -190,7 +191,7 @@ const ProductList: React.FC = () => {
               </Tooltip>
             </h1>
 
-            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} onChange={onChange} pagination={false} />
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products}/>
 
             <Modal title="Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
 
@@ -221,7 +222,7 @@ const ProductList: React.FC = () => {
                       onChange={handleChange}
                       style={{ width: 200 }}
                     >
-                      { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
+                      { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id} key={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
                     </Select>
                 </Form.Item>
 
