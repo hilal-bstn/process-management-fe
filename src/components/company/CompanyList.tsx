@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Empty, Form, Input, Modal, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import AddCompanyModal from './modals/AddCompanyModal';
 import CompanyService from '../../services/companyService';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import { CompanyModel } from '../../models/companyModel';
+import { CompanyTbl } from '../../models/tableModels/companyTbl';
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
 
 const { confirm } = Modal;
 
 
-const onChange: TableProps<DataType>['onChange'] = ( extra) => {
+const onChange: TableProps<CompanyTbl>['onChange'] = ( extra) => {
   console.log('params', extra);
 };
 
@@ -28,6 +22,7 @@ const CompanyList: React.FC = () => {
   const[incorporationCountry,setTncorporationCountry]=React.useState('');
   const[website,setWebsite] = React.useState('');
   const[id,setId]=React.useState('');
+  const [isModalUpdate, setIsModalUpdate] = useState(false);
 
   useEffect(() => {
     getCompanies();
@@ -43,7 +38,7 @@ const getCompanies = async () => {
   }
 }
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<CompanyTbl> = [
   {
     title: 'Company Name',
     dataIndex: 'companyName',
@@ -118,21 +113,37 @@ const validateMessages = {
   },
 };
 
-const showModal = (record:any) => {          
+const showModal = (record:any) => {
+  
+      if(record._id)
+      {     
+        setIsModalUpdate(true);        
+        setId(record._id);            
+      }
+      else{
+        setIsModalUpdate(false);        
+      }
       setCompanyName(record.companyName);
       setCompanyLegalNumber(record.companyLegalNumber);
       setTncorporationCountry(record.incorporationCountry);
       setWebsite(record.website);
-      setId(record._id)
+      
       setIsModalOpen(true);
+      
 };
 
 const handleOk = () => {     
 
   const companyService = new CompanyService();
   const companyModel : CompanyModel = {companyName:companyName,companyLegalNumber:companyLegalNumber,incorporationCountry:incorporationCountry,website:website}
-              
-  companyService.companyUpdate(companyModel,id)  
+    
+    if(isModalUpdate)
+    {
+      companyService.companyUpdate(companyModel,id)  
+    }
+    else{
+      companyService.companyAdd(companyModel);
+    }
     setIsModalOpen(false);
     getCompanies();
     };
@@ -144,11 +155,13 @@ const handleOk = () => {
     
 };
 
-return  (
+return (
         <div>
             <h1 className='table-title'>Companies
             <br/>
-            <AddCompanyModal/>
+            <Tooltip title="Add Company">
+                <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
+            </Tooltip>
             </h1>
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies} onChange={onChange} pagination={false} />
             

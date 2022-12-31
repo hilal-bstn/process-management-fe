@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Empty, Form, Input, InputNumber, Modal, Select, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import AddProductModal from './modals/AddProductModal';
 import ProductService from '../../services/productService';
-import { EditOutlined,DeleteOutlined,ExclamationCircleOutlined} from '@ant-design/icons';
+import { EditOutlined,DeleteOutlined,ExclamationCircleOutlined,PlusOutlined} from '@ant-design/icons';
 import CompanyService from '../../services/companyService';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { ProductModel } from "../../models/productModel";
+import { ProductTbl } from '../../models/tableModels/productTbl';
 
-interface DataType {
-  key: string;
-  name: string;
-  category: string;
-  amount: number;
-  amountUnit:number;
-  company:string
-}
 const { confirm } = Modal;
 
 const layout = {
@@ -34,22 +26,23 @@ const validateMessages = {
   },
 };
 
-const onChange: TableProps<DataType>['onChange'] = ( extra) => {
+const onChange: TableProps<ProductTbl>['onChange'] = (extra) => {
   console.log('params', extra);
 };
 
 const ProductList: React.FC = () => {
   
-      const [products,setProducts] = useState([]);
-      const [companies,setCompanies] = useState([]as any[]);
+      const [products, setProducts] = useState([]);
+      const [companies, setCompanies] = useState([]as any[]);
       const [size, setSize] = useState<SizeType>('middle');
-      const[name,setName]=React.useState('');
-      const[category,setCategory]=React.useState('');
-      const[amount,setAmount]=React.useState('');
-      const[amountUnit,setAmountUnit]=React.useState('');
-      const[companyId,setCompanyId] = React.useState('');
-      const[id,setId]=React.useState('');
+      const [name,setName] = React.useState('');
+      const [category,setCategory] = React.useState('');
+      const [amount, setAmount] = React.useState('');
+      const [amountUnit, setAmountUnit] = React.useState('');
+      const [companyId, setCompanyId] = React.useState('');
+      const [id, setId] = React.useState('');
       const [isModalVisible, setIsModalVisible] = useState(false);
+      const [isModalUpdate, setIsModalUpdate] = useState(false);
 
       useEffect(() => {
           getProducts();
@@ -78,7 +71,7 @@ const ProductList: React.FC = () => {
         }
       }
 
-      const columns: ColumnsType<DataType> = [
+      const columns: ColumnsType<ProductTbl> = [
         {
           title: 'Name',
           dataIndex: 'name',
@@ -113,7 +106,8 @@ const ProductList: React.FC = () => {
         {
           title: 'Delete',
           dataIndex: 'operation',
-          render: (index,record) => <Tooltip title="Delete">
+          render: (index,record) => 
+                          <Tooltip title="Delete">
                             <Space wrap>
                               <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
                             </Space>                   
@@ -142,21 +136,38 @@ const ProductList: React.FC = () => {
         });
       };
 
-      const showModal = (record:any) => {          
+      const showModal = (record:any|{}) => {  
+        if(record._id)
+        {     
+          setIsModalUpdate(true);        
+          setId(record._id);
+          setCompanyId(record.companyId._id);            
+        }
+        
+        else{
+          setIsModalUpdate(false);        
+        }
+        
           setName(record.name);
           setCategory(record.category);
           setAmount(record.amount);
           setAmountUnit(record.amountUnit);
-          setCompanyId(record.companyId._id);
-          setId(record._id)
-          setIsModalVisible(true);                    
+
+          setIsModalVisible(true);                                          
         };
 
         const handleOk = () => {     
           const productService = new ProductService();
+          
           const productModel : ProductModel = {name:name,amount:+amount,amountUnit:+amountUnit,category:category,companyId:companyId}
-                      
-         productService.productUpdate(productModel,id)  
+          if(isModalUpdate)
+          {
+            productService.productUpdate(productModel,id)  
+          }
+          else{
+            productService.productAdd(productModel)  
+          }
+
           setIsModalVisible(false);
           getProducts();
         };
@@ -168,17 +179,17 @@ const ProductList: React.FC = () => {
         const handleChange = (value: string) => {
           setCompanyId(value.toString());
           console.log(companyId);
-          
-          
         };
         
-          return  (
-  
+    return ( 
         <div>
             <h1 className='table-title'>Products
               <br/>
-              <AddProductModal/>
+              <Tooltip title="Add Product">
+                <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
+              </Tooltip>
             </h1>
+
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} onChange={onChange} pagination={false} />
 
             <Modal title="Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
@@ -200,7 +211,7 @@ const ProductList: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item  label="Amount Unit" rules={[{ type: 'number', min: 0,required: true  }]}>
-                <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
+                  <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
                 </Form.Item>
 
                 <Form.Item label="Company" rules={[{ required: true }]}>  
