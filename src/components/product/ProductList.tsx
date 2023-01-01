@@ -185,14 +185,28 @@ const ProductList: React.FC = () => {
           setIsModalVisible(false);
         };
 
-
+      const searchHandle = async(event:any) => {
+        let key = event.target.value;      
+        const productService = new ProductService();
+        if(key){
+            let result = await productService.search(key)
+            if(result)
+            {
+                setProducts(result);
+            }
+        }
+        else{
+            getProducts();
+        }
+      }
+        
     return ( 
         <div>
             <h1 className='table-title'>Products
             <Tooltip title="Add Product">
                 <Button className='add-button' shape="circle" icon={<PlusOutlined className='add-icon'/>} onClick={showModal}/>
             </Tooltip><br/>
-            <Input  size="large" className='search' placeholder="Search by name,legal number or country..." prefix={<SearchOutlined className='search-icon'/>} />
+            <Input onChange={searchHandle} size="large" className='search' placeholder="Search by name or category..." prefix={<SearchOutlined className='search-icon'/>} />
             </h1>
 
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} pagination={false}/>

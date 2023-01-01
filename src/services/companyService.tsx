@@ -47,10 +47,10 @@ export default class CompanyService {
             authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`
         }});
     }
-        async search(key:string) : Promise<any>
-        {
-            const result = await fetch(`http://localhost:5000/company-search/${key}`)
-            const data = await result.json()
-            return data;
-        } 
+    async search(key:string) : Promise<any>
+    {
+        const result = await fetch(`http://localhost:5000/company-search/${key}`)
+        const data = await result.json()
+        return data;
+    } 
 };
