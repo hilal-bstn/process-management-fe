@@ -24,11 +24,11 @@
 }
 
 .footer{
-  position: relative;
+
+  position: absolute;
   bottom: 0;
-  text-align: center;
   width: 100%;
-  /* background-color: skyblue; */
+  height: 2.5rem;
   border-color: whitesmoke;
   border-top-style: outset;
 
@@ -105,13 +105,33 @@
 }
 
 .add-button{
-  min-width: 35px !important;
+  min-width: 55px !important;
   width: 40px;
-  color: slateblue;
+  color: cadetblue;
   border-bottom: dashed;
   border-top: dashed;
   border-left-style: hidden;
   border-right-style: hidden;
+  right: 4rem;
+  position: absolute;
+  min-height: 55px;
+  top: 5rem;
+}
+.add-icon{
+  font-size: xx-large;
+
+}
+
+.search{
+  width: 25vi;
+  border-block-start: none;
+  /* border-bottom-color: darksalmon; */
+  border-right-style: ridge;
+  /* border-left-color: darksalmon; */
+  border-color: lightsalmon;
+}
+.search-icon{
+  color: sienna;
 }
 
 .ant-spin-container{

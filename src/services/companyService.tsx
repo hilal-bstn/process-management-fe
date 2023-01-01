@@ -39,13 +39,18 @@ export default class CompanyService {
              }});
    }
    async companyAdd (company:CompanyModel) {
-    await fetch(`http://localhost:5000/add-company`,{
-        method:'Post',
-        body: JSON.stringify({company}),
-        headers:{
-        'Content-Type':"application/json",
-        authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`
-    }});
-}
-    
+        await fetch(`http://localhost:5000/add-company`,{
+            method:'Post',
+            body: JSON.stringify({company}),
+            headers:{
+            'Content-Type':"application/json",
+            authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`
+        }});
+    }
+        async search(key:string) : Promise<any>
+        {
+            const result = await fetch(`http://localhost:5000/company-search/${key}`)
+            const data = await result.json()
+            return data;
+        } 
 };

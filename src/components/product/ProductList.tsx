@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Empty, Form, Input, InputNumber, Modal, Select, Space, Table, Tooltip } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import type { ColumnsType,  } from 'antd/es/table';
 import ProductService from '../../services/productService';
-import { EditOutlined,DeleteOutlined,ExclamationCircleOutlined,PlusOutlined} from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined, SearchOutlined} from '@ant-design/icons';
 import CompanyService from '../../services/companyService';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { ProductModel } from "../../models/productModel";
@@ -186,14 +186,13 @@ const ProductList: React.FC = () => {
         };
 
 
-        
     return ( 
         <div>
             <h1 className='table-title'>Products
-              <br/>
-              <Tooltip title="Add Product">
-                <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
-              </Tooltip>
+            <Tooltip title="Add Product">
+                <Button className='add-button' shape="circle" icon={<PlusOutlined className='add-icon'/>} onClick={showModal}/>
+            </Tooltip><br/>
+            <Input  size="large" className='search' placeholder="Search by name,legal number or country..." prefix={<SearchOutlined className='search-icon'/>} />
             </h1>
 
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} pagination={false}/>

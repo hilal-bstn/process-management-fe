@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Empty, Form, Input, Modal, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CompanyService from '../../services/companyService';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined, SearchOutlined} from '@ant-design/icons';
 import { CompanyModel } from '../../models/companyModel';
 import { CompanyTbl } from '../../models/tableModels/companyTbl';
 import NotificationService from '../../services/notificationService';
@@ -147,13 +147,30 @@ const showModal = (record:any) => {
     const handleCancel = () => {
       setIsModalOpen(false);
     };
+
+    const searchHandle = async(event:any) => {
+      let key = event.target.value;      
+      const companyService = new CompanyService();
+      if(key){
+          let result = await companyService.search(key)
+          if(result)
+          {
+              setCompanies(result);
+          }
+      }
+      else{
+          getCompanies();
+      }
+    }
+    
 return (
         <div>
+          
             <h1 className='table-title'>Companies
-            <br/>
             <Tooltip title="Add Company">
-                <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
-            </Tooltip>
+                <Button className='add-button' shape="circle" icon={<PlusOutlined className='add-icon'/>} onClick={showModal}/>
+            </Tooltip><br/>
+            <Input onChange={searchHandle} size="large" className='search' placeholder="Search by name,legal number or country..." prefix={<SearchOutlined className='search-icon'/>} />
             </h1>
             <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies} pagination={false}/>
             
