@@ -7,18 +7,13 @@ import CompanyService from '../../services/companyService';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { ProductModel } from "../../models/productModel";
 import { ProductTbl } from '../../models/tableModels/productTbl';
+import NotificationService from '../../services/notificationService';
 
 const { confirm } = Modal;
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 const validateMessages = {
   required: '${label} is required!',
   types: {
-    email: '${label} is not a valid email!',
     number: '${label} is not a valid number!',
   },
   number: {
@@ -28,14 +23,10 @@ const validateMessages = {
 
 const ProductList: React.FC = () => {
   
+      const [form] = Form.useForm();
       const [products, setProducts] = useState([]);
       const [companies, setCompanies] = useState([]as any[]);
       const [size, setSize] = useState<SizeType>('middle');
-      const [name,setName] = React.useState('');
-      const [category,setCategory] = React.useState('');
-      const [amount, setAmount] = React.useState('');
-      const [amountUnit, setAmountUnit] = React.useState('');
-      const [companyId, setCompanyId] = React.useState('');
       const [id, setId] = React.useState('');
       const [isModalVisible, setIsModalVisible] = useState(false);
       const [isModalUpdate, setIsModalUpdate] = useState(false);
@@ -99,7 +90,7 @@ const ProductList: React.FC = () => {
           title: 'Edit',
           key: 'edit',
           render: (index,record) =>( 
-            <Button shape="circle" title="Edit" icon={<EditOutlined />} key={index} onClick={() => showModal(record)}/>)
+            <Button shape="circle" className="edit-button" title="Edit" icon={<EditOutlined />} key={index} onClick={() => showModal(record)}/>)
         },
         {
           title: 'Delete',
@@ -125,6 +116,7 @@ const ProductList: React.FC = () => {
           onOk() {
             const productService = new ProductService();
             productService.productDelete(record._id);
+            NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
             getProducts();
           },
           onCancel() {},
@@ -134,46 +126,66 @@ const ProductList: React.FC = () => {
       const showModal = (record:any|{}) => {  
         if(record._id)
         {     
+          console.log(record);
+          
           setIsModalUpdate(true);        
           setId(record._id);
-          setCompanyId(record.companyId._id);            
+          form.setFieldsValue({
+            companyId: record.companyId._id
+          });
         }
         
         else{
           setIsModalUpdate(false);        
         }
-        
-          setName(record.name);
-          setCategory(record.category);
-          setAmount(record.amount);
-          setAmountUnit(record.amountUnit);
+        form.setFieldsValue({
+          name: record.name,
+          category: record.category,
+          amount: record.amount,
+          amountUnit: record.amountUnit
+        });
 
           setIsModalVisible(true);                                          
         };
 
-        const handleOk = () => {     
-          const productService = new ProductService();
-          
-          const productModel : ProductModel = {name:name,amount:+amount,amountUnit:+amountUnit,category:category,companyId:companyId}
-          if(isModalUpdate)
-          {
-            productService.productUpdate(productModel,id)  
-          }
-          else{
-            productService.productAdd(productModel)  
-          }
 
-          setIsModalVisible(false);
-          getProducts();
+        const handleChange = (value: string) => {
+          form.setFieldsValue({
+            companyId: value.toString()
+          });
+        };
+
+        const onFinish = (values: any) => {
+          const productService = new ProductService();
+          const productModel : ProductModel = {
+            name: values.name,
+            amount: values.amount,
+            amountUnit: values.amountUnit,
+            category: values.category,
+            companyId:values.companyId}
+            if(isModalUpdate)
+            {
+              productService.productUpdate(productModel,id);
+              NotificationService.openSuccessNotification({description:"Record successfully updated!",placement:"bottomRight",title:""});    
+            }
+            else{
+              productService.productAdd(productModel); 
+              NotificationService.openSuccessNotification({description:"Record successfully added!",placement:"bottomRight",title:""});   
+            } 
+    
+            setIsModalVisible(false);
+            getProducts();
         };
       
+        const onFinishFailed = (errorInfo: any) => {
+          NotificationService.openErrorNotification({description:"Required fields cannot be empty!",placement:"bottomRight",title:"Invalid Form"});
+        };
+    
         const handleCancel = () => {
           setIsModalVisible(false);
         };
 
-        const handleChange = (value: string) => {
-          setCompanyId(value.toString());
-        };
+
         
     return ( 
         <div>
@@ -184,40 +196,59 @@ const ProductList: React.FC = () => {
               </Tooltip>
             </h1>
 
-            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products}/>
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={products} pagination={false}/>
 
-            <Modal title = "Product Update" open={isModalVisible} onOk={handleOk}   onCancel={handleCancel}>
+            <Modal title = {isModalUpdate ?"Product Update":"Product Add"} 
+              open={isModalVisible} 
+              onCancel={handleCancel} 
+              footer={null}>
 
-                <Form {...layout} name="nest-messages" 
+                <Form name="nest-messages" 
+                layout="vertical"
                 initialValues={{ remember: true }}
-                validateMessages={validateMessages} className='model-form'>
+                validateMessages={validateMessages}
+                form={form}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                className='model-form'>
                 
                 <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                  <Input value={name} onChange={(e)=>setName(e.target.value)}/>
+                  <Input/>
                 </Form.Item>
 
                 <Form.Item label="Category" name="category" rules={[{ required: true  }]}>
-                  <Input onChange={(e)=>setCategory(e.target.value)} value={category}/>
+                  <Input/>
                 </Form.Item>
 
                 <Form.Item label="Amount" name="amount" rules={[{ type: 'number', min: 0, required: true  }]}>
-                  <InputNumber onChange={(e)=>setAmount(e!)} value={amount}/>
+                  <InputNumber/>
                 </Form.Item>
 
                 <Form.Item  label="Amount Unit" name="amountUnit" rules={[{ type: 'number', min: 0, required: true  }]}>
-                  <InputNumber onChange={(e)=>setAmountUnit(e!)} value={amountUnit}/>
+                  <InputNumber/>
                 </Form.Item>
 
                 <Form.Item label="Company" name="companyId" rules={[{ required: true }]}>  
                     <Select
-                      defaultValue={companyId}
-                      size={size}
                       onChange={handleChange}
+                      size={size}
                       style={{ width: 200 }}
                     >
                       { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id} key={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
                     </Select>
                 </Form.Item>
+
+                  <Space className='modal-form'>
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                      <Button onClick={handleCancel} >Cancel</Button>
+                    </Form.Item>
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                      <Button type="primary" htmlType="submit" >
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Space>
 
               </Form>
             </Modal>

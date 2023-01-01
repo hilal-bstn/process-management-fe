@@ -133,17 +133,24 @@
 }
 
 .table-title{
-    color: darksalmon;
-    font-family: emoji;
-    border-bottom-style: inset;
-    padding-bottom: 5px;
+  color: darksalmon;
+  font-family: emoji;
+  border-bottom-style: inset;
+  padding-bottom: 5px;
 }
 
 .delete-button{
   border-right-color: chocolate;
-    border-left-color: chocolate;
-    color: darksalmon;
+  border-left-color: chocolate;
+  color: darksalmon;
 }
+
+.edit-button{
+  border-right-color: slateblue;
+  border-left-color: slateblue;
+  color: slateblue;
+}
+
 .ant-table-content{
   border-top: outset;
 }
@@ -154,8 +161,8 @@
 
 .ant-modal-title{
   font-family: -webkit-body;
-    color: currentColor;
-    border-bottom-style: inset;
+  color: currentColor;
+  border-bottom-style: inset;
 }
 .modal-form{
   float: right;

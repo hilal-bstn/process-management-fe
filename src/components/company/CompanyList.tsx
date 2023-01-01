@@ -62,7 +62,7 @@ const columns: ColumnsType<CompanyTbl> = [
     title: 'Edit',
     key: 'edit',
     render: (index,record) => (
-      <Button shape="circle" title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
+      <Button shape="circle" className='edit-button' title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
   ,
   },
   {
@@ -88,6 +88,7 @@ const showDeleteConfirm = (record:any) => {
       onOk() {
         const companyService = new CompanyService();
         companyService.companyDelete(record._id);
+        NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
         getCompanies();
       },
       onCancel() {},
@@ -154,7 +155,7 @@ return (
                 <Button className='add-button' shape="circle" icon={<PlusOutlined />} onClick={showModal}/>
             </Tooltip>
             </h1>
-            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies}/>
+            <Table locale={{ emptyText: (<Empty/>)}} columns={columns} dataSource={companies} pagination={false}/>
             
             <Modal 
               title = {isModalUpdate ?"Company Update":"Company Add"} 
