@@ -60,30 +60,38 @@ const ProductList: React.FC = () => {
           title: 'Name',
           dataIndex: 'name',
           width: '30%',
-          key: 'name'
+          key: 'name',
+          sorter: (a, b) => a.name.length - b.name.length,
+          sortDirections: ['descend'],
         },
         {
           title: 'Category',
           dataIndex: 'category',
           width: '10%',
-          key: 'category'
+          key: 'category',
+          sorter: (a, b) => a.category.length - b.category.length,
+          sortDirections: ['descend'],
         },
         {
           title: 'Amount',
           dataIndex: 'amount',
           width: '10%',
-          key: 'amount'
+          key: 'amount',
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => a.amount - b.amount,
         },
         {
           title: 'Amount Unit',
           dataIndex: 'amountUnit',
           width: '10%',
-          key: 'amountUnit'
+          key: 'amountUnit',
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => a.amountUnit - b.amountUnit
         },
         {
           title: 'Company',
           width: '40%',
-          key: 'company',
+          key: 'companyId',
           render: (record) => record.companyId?.companyName
         },
         {

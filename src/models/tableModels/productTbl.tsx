@@ -4,5 +4,5 @@ export interface ProductTbl {
     category: string;
     amount: number;
     amountUnit:number;
-    company:string
+    companyId:string
   }

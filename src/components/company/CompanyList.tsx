@@ -38,25 +38,33 @@ const columns: ColumnsType<CompanyTbl> = [
     title: 'Company Name',
     dataIndex: 'companyName',
     width: '30%',
-    key: 'companyName'
+    key: 'companyName',
+    sorter: (a, b) => a.companyName.length - b.companyName.length,
+    sortDirections: ['descend'],
   },
   {
     title: 'Company Legal Number',
     dataIndex: 'companyLegalNumber',
     width: '30%',
-    key: 'companyLegalNumber'
+    key: 'companyLegalNumber',
+    sorter: (a, b) => a.companyLegalNumber.length - b.companyLegalNumber.length,
+    sortDirections: ['descend'],
   },
   {
     title: 'Incorporation Country',
     dataIndex: 'incorporationCountry',
     width: '20%',
-    key: 'incorporationCountry'
+    key: 'incorporationCountry',
+    sorter: (a, b) => a.incorporationCountry.length - b.incorporationCountry.length,
+    sortDirections: ['descend'],
   },
   {
     title: 'Website',
     dataIndex: 'website',
     width: '10%',
-    key: 'website'
+    key: 'website',
+    sorter: (a, b) => a.website.length - b.website.length,
+    sortDirections: ['descend'],
   },
   {
     title: 'Edit',
