@@ -143,10 +143,6 @@
   height: 35i;
 }
 
-.ant-table{
-  height: 36vi
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -174,7 +170,6 @@
 .ant-table-content{
   border-top: outset;
 }
-
 .ant-modal-body{
   display: inline-grid;
 }
@@ -186,6 +181,10 @@
 }
 .modal-form{
   float: right;
+}
+
+.ant-input-number{
+  width: -webkit-fill-available;
 }
 .ant-form-vertical{
   width: 25vi;

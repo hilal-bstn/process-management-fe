@@ -253,7 +253,6 @@ const ProductList: React.FC = () => {
                     <Select
                       onChange={handleChange}
                       size={size}
-                      style={{ width: 200 }}
                     >
                       { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id} key={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
                     </Select>
