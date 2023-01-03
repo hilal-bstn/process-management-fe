@@ -29,6 +29,7 @@ const ProductList: React.FC = () => {
           getCompanies();
       },[]);
 
+      //product list created
       const getProducts = async () => {
         let productResult = await productService.products();
         
@@ -40,7 +41,7 @@ const ProductList: React.FC = () => {
           setProducts([])
         }
       }
-
+      //companies list for product update/add modal
       const getCompanies = async () => {
         let companyResult = await companyService.companies();
         
@@ -48,7 +49,7 @@ const ProductList: React.FC = () => {
         {      
           setCompanies(companyResult);}
       }
-
+      //product columns
       const columns: ColumnsType<ProductTbl> = [
         {
           title: 'Name',
@@ -106,7 +107,7 @@ const ProductList: React.FC = () => {
       
         }
       ];
-
+      //product delete confirm
       const showDeleteConfirm = (record:any) => {
         confirm({
           title: 'Are you sure delete this product?',
@@ -123,7 +124,7 @@ const ProductList: React.FC = () => {
           onCancel() {},
         });
       };
-
+      //product update and add modal
       const showModal = (record:any|{}) => {  
         if(record._id)
         {               
@@ -147,13 +148,13 @@ const ProductList: React.FC = () => {
           setIsModalVisible(true);                                          
         };
 
-
+        //company select
         const handleChange = (value: string) => {
           form.setFieldsValue({
             companyId: value.toString()
           });
         };
-
+        //modal form management
         const onFinish = (values: any) => {
           const productModel : ProductModel = {
             name: values.name,
@@ -173,7 +174,7 @@ const ProductList: React.FC = () => {
     
             setIsModalVisible(false);
         };
-      
+      //modal form failed
         const onFinishFailed = (errorInfo: any) => {
           NotificationService.openErrorNotification({description:"Required fields cannot be empty!",placement:"bottomRight",title:"Invalid Form"});
         };
@@ -181,7 +182,7 @@ const ProductList: React.FC = () => {
         const handleCancel = () => {
           setIsModalVisible(false);
         };
-
+      //for search input 
       const searchHandle = async(event:any) => {
         let key = event.target.value;      
         if(key){
@@ -221,30 +222,30 @@ const ProductList: React.FC = () => {
                 onFinishFailed={onFinishFailed}
                 className='model-form'>
                 
-                <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                  <Input/>
-                </Form.Item>
+                  <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+                    <Input/>
+                  </Form.Item>
 
-                <Form.Item label="Category" name="category" rules={[{ required: true  }]}>
-                  <Input/>
-                </Form.Item>
+                  <Form.Item label="Category" name="category" rules={[{ required: true  }]}>
+                    <Input/>
+                  </Form.Item>
 
-                <Form.Item label="Amount" name="amount" rules={[{ type: 'number', min: 0, required: true  }]}>
-                  <InputNumber/>
-                </Form.Item>
+                  <Form.Item label="Amount" name="amount" rules={[{ type: 'number', min: 0, required: true  }]}>
+                    <InputNumber/>
+                  </Form.Item>
 
-                <Form.Item  label="Amount Unit" name="amountUnit" rules={[{ type: 'number', min: 0, required: true  }]}>
-                  <InputNumber/>
-                </Form.Item>
+                  <Form.Item  label="Amount Unit" name="amountUnit" rules={[{ type: 'number', min: 0, required: true  }]}>
+                    <InputNumber/>
+                  </Form.Item>
 
-                <Form.Item label="Company" name="companyId" rules={[{ required: true }]}>  
-                    <Select
-                      onChange={handleChange}
-                      size={size}
-                    >
-                      { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id} key={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
-                    </Select>
-                </Form.Item>
+                  <Form.Item label="Company" name="companyId" rules={[{ required: true }]}>  
+                      <Select
+                        onChange={handleChange}
+                        size={size}
+                      >
+                        { companies.length>0 ?companies.map(option=>{ return (<Select.Option value={option._id} key={option._id}>{option.companyName}</Select.Option>)}):<Empty/>}
+                      </Select>
+                  </Form.Item>
 
                   <Space className='modal-form'>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -258,7 +259,7 @@ const ProductList: React.FC = () => {
                     </Form.Item>
                   </Space>
 
-              </Form>
+                </Form>
             </Modal>
         </div>)
 };

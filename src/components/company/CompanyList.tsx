@@ -15,97 +15,97 @@ let companyService = new CompanyService();
 
 const CompanyList: React.FC = () => {
 
-  const [form] = Form.useForm();
-  const [companies, setCompanies] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [id,setId] = React.useState('');
-  const [isModalUpdate, setIsModalUpdate] = useState(false);
+    const [form] = Form.useForm();
+    const [companies, setCompanies] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [id,setId] = React.useState('');
+    const [isModalUpdate, setIsModalUpdate] = useState(false);
   
-  useEffect(() => {
-    getCompanies();
-  },[]);
-
-const getCompanies = async () => {
-  let companyResult = await companyService.companies();
-  
-  if(companyResult.length!== undefined)//?
-  {      
-    setCompanies(companyResult);    
-  }
-  else{
-    setCompanies([])
-  }
-}
-
-const columns: ColumnsType<CompanyTbl> = [
-  {
-    title: 'Company Name',
-    dataIndex: 'companyName',
-    width: '30%',
-    key: 'companyName',
-    sorter: (a, b) => a.companyName.length - b.companyName.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Company Legal Number',
-    dataIndex: 'companyLegalNumber',
-    width: '30%',
-    key: 'companyLegalNumber',
-    sorter: (a, b) => a.companyLegalNumber.length - b.companyLegalNumber.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Incorporation Country',
-    dataIndex: 'incorporationCountry',
-    width: '20%',
-    key: 'incorporationCountry',
-    sorter: (a, b) => a.incorporationCountry.length - b.incorporationCountry.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Website',
-    dataIndex: 'website',
-    width: '10%',
-    key: 'website',
-    sorter: (a, b) => a.website.length - b.website.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Edit',
-    key: 'edit',
-    render: (index,record) => (
-      <Button shape="circle" className='edit-button' title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
-  ,
-  },
-  {
-    title: 'Delete',
-    key: 'delete',
-    render: (index,record) => <Tooltip title="Delete">
-                      <Space wrap>
-                        <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
-                      </Space>                   
-                    </Tooltip>,
-
-  }
-];
-
-const showDeleteConfirm = (record:any) => {
-    confirm({
-      title: 'Are you sure delete this company?',
-      icon: <ExclamationCircleOutlined />,
-      content: 'Transaction cannot be undone after confirmation.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        companyService.companyDelete(record._id).then(()=>{getCompanies()});
-        NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
+    useEffect(() => {
+      getCompanies();
+    },[]);
+//companies list
+    const getCompanies = async () => {
+      let companyResult = await companyService.companies();
+      
+      if(companyResult.length!== undefined)//?
+      {      
+        setCompanies(companyResult);    
+      }
+      else{
+        setCompanies([])
+      }
+    }
+//company columns
+    const columns: ColumnsType<CompanyTbl> = [
+      {
+        title: 'Company Name',
+        dataIndex: 'companyName',
+        width: '30%',
+        key: 'companyName',
+        sorter: (a, b) => a.companyName.length - b.companyName.length,
+        sortDirections: ['descend'],
       },
-      onCancel() {},
-    });
-};
+      {
+        title: 'Company Legal Number',
+        dataIndex: 'companyLegalNumber',
+        width: '30%',
+        key: 'companyLegalNumber',
+        sorter: (a, b) => a.companyLegalNumber.length - b.companyLegalNumber.length,
+        sortDirections: ['descend'],
+      },
+      {
+        title: 'Incorporation Country',
+        dataIndex: 'incorporationCountry',
+        width: '20%',
+        key: 'incorporationCountry',
+        sorter: (a, b) => a.incorporationCountry.length - b.incorporationCountry.length,
+        sortDirections: ['descend'],
+      },
+      {
+        title: 'Website',
+        dataIndex: 'website',
+        width: '10%',
+        key: 'website',
+        sorter: (a, b) => a.website.length - b.website.length,
+        sortDirections: ['descend'],
+      },
+      {
+        title: 'Edit',
+        key: 'edit',
+        render: (index,record) => (
+          <Button shape="circle" className='edit-button' title="Edit" icon={<EditOutlined />} onClick={() => showModal(record)}/>)
+      ,
+      },
+      {
+        title: 'Delete',
+        key: 'delete',
+        render: (index,record) => <Tooltip title="Delete">
+                          <Space wrap>
+                            <Button onClick={() =>showDeleteConfirm(record)} shape="circle" className='delete-button' icon={<DeleteOutlined/>} />
+                          </Space>                   
+                        </Tooltip>,
 
-const showModal = (record:any) => {  
+      }
+    ];
+    //company delete confirm
+    const showDeleteConfirm = (record:any) => {
+      confirm({
+        title: 'Are you sure delete this company?',
+        icon: <ExclamationCircleOutlined />,
+        content: 'Transaction cannot be undone after confirmation.',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+          companyService.companyDelete(record._id).then(()=>{getCompanies()});
+          NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
+        },
+        onCancel() {},
+      });
+    };
+    //company add/update show modal
+    const showModal = (record:any) => {  
       if(record._id)
       {     
         setIsModalUpdate(true);        
@@ -122,8 +122,8 @@ const showModal = (record:any) => {
       });
 
       setIsModalOpen(true);   
-};
-
+    };
+    //company add/update modal form management
     const onFinish = (values: any) => {
       const companyModel : CompanyModel = {
         companyName: values.companyName,
@@ -144,7 +144,7 @@ const showModal = (record:any) => {
       setIsModalOpen(false);
       ;
     };
-  
+    //modal form failed
     const onFinishFailed = (errorInfo: any) => {
       NotificationService.openErrorNotification({description:"Required fields cannot be empty!",placement:"bottomRight",title:"Invalid Form"});
     };
@@ -152,8 +152,8 @@ const showModal = (record:any) => {
     const handleCancel = () => {
       setIsModalOpen(false);
     };
-
-    const searchHandle = async(event:any) => {
+      //for search input 
+      const searchHandle = async(event:any) => {
       let key = event.target.value;      
       if(key){
           let result = await companyService.search(key)
@@ -225,18 +225,19 @@ return (
                         >
                      <Input/>
                   </Form.Item>
+
                   <Space className='modal-form'>
+                      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button onClick={handleCancel} >Cancel</Button>
+                      </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                      <Button onClick={handleCancel} >Cancel</Button>
-                    </Form.Item>
-
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                      <Button type="primary" htmlType="submit" >
-                        Submit
-                      </Button>
-                    </Form.Item>
+                      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type="primary" htmlType="submit" >
+                          Submit
+                        </Button>
+                      </Form.Item>
                     </Space>
+
                 </Form>
             </Modal>
         </div>)
