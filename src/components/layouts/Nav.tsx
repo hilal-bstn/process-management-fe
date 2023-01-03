@@ -15,7 +15,7 @@ const Nav=()=>{
                     <li><Link to="/">Reports</Link></li>
                     <li><Link to="/products">Products</Link></li>
                     <li><Link to="/companies">Companies</Link></li>
-                    <li><Link onClick={logout} to="/login">Logout ({JSON.parse(auth).name})</Link></li>
+                    <li><Link onClick={logout} to="/login">Logout ({JSON.parse(auth).username})</Link></li>
                                    
                 </ul>
                 :
