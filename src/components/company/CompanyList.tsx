@@ -10,6 +10,7 @@ import { validateMessages } from '../../models/constants/tableConst';
 
 
 const { confirm } = Modal;
+let companyService = new CompanyService();
 
 
 const CompanyList: React.FC = () => {
@@ -25,7 +26,6 @@ const CompanyList: React.FC = () => {
   },[]);
 
 const getCompanies = async () => {
-  let companyService = new CompanyService();
   let companyResult = await companyService.companies();
   
   if(companyResult.length!== undefined)//?
@@ -98,7 +98,6 @@ const showDeleteConfirm = (record:any) => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        const companyService = new CompanyService();
         companyService.companyDelete(record._id).then(()=>{getCompanies()});
         NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
       },
@@ -126,7 +125,6 @@ const showModal = (record:any) => {
 };
 
     const onFinish = (values: any) => {
-      const companyService = new CompanyService();
       const companyModel : CompanyModel = {
         companyName: values.companyName,
         companyLegalNumber: values.companyLegalNumber,
@@ -157,7 +155,6 @@ const showModal = (record:any) => {
 
     const searchHandle = async(event:any) => {
       let key = event.target.value;      
-      const companyService = new CompanyService();
       if(key){
           let result = await companyService.search(key)
           if(result)

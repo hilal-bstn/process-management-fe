@@ -11,7 +11,8 @@ import NotificationService from '../../services/notificationService';
 import { validateMessages } from '../../models/constants/tableConst';
 
 const { confirm } = Modal;
-
+let productService = new ProductService();
+let companyService = new CompanyService();
 
 const ProductList: React.FC = () => {
   
@@ -29,7 +30,6 @@ const ProductList: React.FC = () => {
       },[]);
 
       const getProducts = async () => {
-        let productService = new ProductService();
         let productResult = await productService.products();
         
         if(productResult.length!== undefined)
@@ -42,7 +42,6 @@ const ProductList: React.FC = () => {
       }
 
       const getCompanies = async () => {
-        let companyService = new CompanyService();
         let companyResult = await companyService.companies();
         
         if(companyResult)
@@ -117,7 +116,6 @@ const ProductList: React.FC = () => {
           okType: 'danger',
           cancelText: 'No',
           onOk() {
-            const productService = new ProductService();
             productService.productDelete(record._id).then(()=>{getProducts();
           });
             NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
@@ -128,9 +126,7 @@ const ProductList: React.FC = () => {
 
       const showModal = (record:any|{}) => {  
         if(record._id)
-        {     
-          console.log(record);
-          
+        {               
           setIsModalUpdate(true);        
           setId(record._id);
           form.setFieldsValue({
@@ -159,7 +155,6 @@ const ProductList: React.FC = () => {
         };
 
         const onFinish = (values: any) => {
-          const productService = new ProductService();
           const productModel : ProductModel = {
             name: values.name,
             amount: values.amount,
@@ -189,7 +184,6 @@ const ProductList: React.FC = () => {
 
       const searchHandle = async(event:any) => {
         let key = event.target.value;      
-        const productService = new ProductService();
         if(key){
             let result = await productService.search(key)
             if(result)
