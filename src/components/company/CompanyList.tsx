@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined, 
 import { CompanyModel } from '../../models/companyModel';
 import { CompanyTbl } from '../../models/tableModels/companyTbl';
 import NotificationService from '../../services/notificationService';
+import { validateMessages } from '../../models/constants/tableConst';
 
 
 const { confirm } = Modal;
@@ -18,7 +19,7 @@ const CompanyList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [id,setId] = React.useState('');
   const [isModalUpdate, setIsModalUpdate] = useState(false);
-
+  
   useEffect(() => {
     getCompanies();
   },[]);
@@ -103,10 +104,6 @@ const showDeleteConfirm = (record:any) => {
       },
       onCancel() {},
     });
-};
-
-const validateMessages = {
-  required: '${label} is required!'
 };
 
 const showModal = (record:any) => {  

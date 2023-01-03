@@ -8,18 +8,10 @@ import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { ProductModel } from "../../models/productModel";
 import { ProductTbl } from '../../models/tableModels/productTbl';
 import NotificationService from '../../services/notificationService';
+import { validateMessages } from '../../models/constants/tableConst';
 
 const { confirm } = Modal;
 
-const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    number: '${label} is not a valid number!',
-  },
-  number: {
-    range: '${label} must be between ${min} and ${max}',
-  },
-};
 
 const ProductList: React.FC = () => {
   
