@@ -1,4 +1,6 @@
+import Login from "../components/auth/Login";
 import { CompanyModel } from "../models/companyModel";
+import NotificationService from "./notificationService";
 
 export default class CompanyService {
     async companies()
@@ -17,7 +19,12 @@ export default class CompanyService {
         {
             headers:{authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`}
         });
-
+        if(result.status===401)
+        {
+            localStorage.clear();
+            <Login/>
+            NotificationService.openErrorNotification({description:"Unauthorized.Please login again.",placement:"bottomRight",title:""});
+        }
         const data = await result.json()
         return data;
     } 

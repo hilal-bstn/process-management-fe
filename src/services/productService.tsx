@@ -1,13 +1,17 @@
+import Login from "../components/auth/Login";
 import { ProductModel } from "../models/productModel";
+import NotificationService from "./notificationService";
 
 export default class ProductService {
     async products(): Promise<any>
     {
+
         const result = await fetch('http://localhost:5000/products',
         {
             headers:{authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`}
         });
-        const data = await result.json()
+
+        const data = await result.json();
         return data;
     } 
 
@@ -18,7 +22,13 @@ export default class ProductService {
         {
             headers:{authorization: `bearer ${JSON.parse(localStorage.getItem('token')!)}`}
         });
-
+        
+        if(result.status===401)
+        {
+            localStorage.clear();
+            <Login/>
+            NotificationService.openErrorNotification({description:"Unauthorized.Please login again.",placement:"bottomRight",title:""});
+        }
         const data = await result.json()
         return data;
     } 
