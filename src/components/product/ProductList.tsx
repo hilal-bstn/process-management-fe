@@ -40,9 +40,12 @@ const ProductList: React.FC = () => {
         let productService = new ProductService();
         let productResult = await productService.products();
         
-        if(productResult.length>0)
-        {
+        if(productResult.length!== undefined)
+        {            
           setProducts(productResult);    
+        }
+        else{
+          setProducts([])
         }
       }
 
@@ -123,9 +126,9 @@ const ProductList: React.FC = () => {
           cancelText: 'No',
           onOk() {
             const productService = new ProductService();
-            productService.productDelete(record._id);
+            productService.productDelete(record._id).then(()=>{getProducts();
+          });
             NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
-            getProducts();
           },
           onCancel() {},
         });
@@ -173,16 +176,15 @@ const ProductList: React.FC = () => {
             companyId:values.companyId}
             if(isModalUpdate)
             {
-              productService.productUpdate(productModel,id);
+              productService.productUpdate(productModel,id).then(()=>{getProducts()});
               NotificationService.openSuccessNotification({description:"Record successfully updated!",placement:"bottomRight",title:""});    
             }
             else{
-              productService.productAdd(productModel); 
+              productService.productAdd(productModel).then(() => {getProducts();}); 
               NotificationService.openSuccessNotification({description:"Record successfully added!",placement:"bottomRight",title:""});   
             } 
     
             setIsModalVisible(false);
-            getProducts();
         };
       
         const onFinishFailed = (errorInfo: any) => {

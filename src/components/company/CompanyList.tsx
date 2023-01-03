@@ -27,9 +27,12 @@ const getCompanies = async () => {
   let companyService = new CompanyService();
   let companyResult = await companyService.companies();
   
-  if(companyResult.length>0)
+  if(companyResult.length!== undefined)//?
   {      
     setCompanies(companyResult);    
+  }
+  else{
+    setCompanies([])
   }
 }
 
@@ -95,9 +98,8 @@ const showDeleteConfirm = (record:any) => {
       cancelText: 'No',
       onOk() {
         const companyService = new CompanyService();
-        companyService.companyDelete(record._id);
+        companyService.companyDelete(record._id).then(()=>{getCompanies()});
         NotificationService.openSuccessNotification({description:"Record successfully deleted!",placement:"bottomRight",title:""});  
-        getCompanies();
       },
       onCancel() {},
     });
@@ -136,16 +138,16 @@ const showModal = (record:any) => {
         
         if(isModalUpdate)
         {
-          companyService.companyUpdate(companyModel,id);
+          companyService.companyUpdate(companyModel,id).then(()=>{getCompanies()});
           NotificationService.openSuccessNotification({description:"Record successfully updated!",placement:"bottomRight",title:""});  
         }
         else{
-          companyService.companyAdd(companyModel);
+          companyService.companyAdd(companyModel).then(()=>{getCompanies()});;
           NotificationService.openSuccessNotification({description:"Record successfully added!",placement:"bottomRight",title:""});  
         }
 
       setIsModalOpen(false);
-      getCompanies();
+      ;
     };
   
     const onFinishFailed = (errorInfo: any) => {
